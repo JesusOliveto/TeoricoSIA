@@ -1,0 +1,8 @@
+Filminas	Libro											                                Capitulo
+--------	-----											                                --------
+Clase 4		Solo filminas y anotaciones del cada alumno
+Clase 5		Inteligencia Artificial con aplicaciones a la ingeniería - Pedro Ponce Cruz.pdf		3
+Clase 6		Inteligencia Artificial con aplicaciones a la ingeniería - Pedro Ponce Cruz.pdf		3
+			Los mapas auto-organizados de Kohonen (SOM).pdf	(Para profundizar Red de Kohonen)
+Clase 7		Inteligencia Artificial con aplicaciones a la ingeniería - Pedro Ponce Cruz.pdf		4
+
