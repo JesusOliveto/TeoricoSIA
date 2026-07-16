@@ -364,7 +364,7 @@ Para cada clase C:
 
 Se evalúa p/t de cada condición candidata: Peludo=SÍ → 3/5 = 0,6; Peludo=NO → 0/3 = 0; Edad=VIEJO → 1/3 = 0,33; Edad=JOVEN → 2/5 = 0,4; Tamaño=GRANDE → 2/4 = 0,5; **Tamaño=MEDIANO → 1/1 = 1** ✓; Tamaño=PEQUEÑO → 0/3 = 0.
 
-Se elige Tamaño=MEDIANO (mayor p/t) → `SI Tamaño=MEDIANO ENTONCES Clase=LEÓN` (regla ya perfecta, cubre 1 caso). Se eliminan los casos cubiertos y se repite: en la segunda pasada se llega a `SI Peludo=SÍ Y Tamaño=GRANDE ENTONCES Clase=LEÓN` (cuando un atributo restante tiene igual p/t para todos sus valores, la regla queda como está). Luego se continúa igual para la clase NO LEÓN.
+Se elige Tamaño=MEDIANO (mayor p/t). ✅ Según el criterio estándar de PRISM, la regla ya es perfecta (p/t = 1) y se detiene aquí: `SI Tamaño=MEDIANO ENTONCES Clase=LEÓN` (cubre 1 caso). 📖 El anexo de la cátedra continúa agregando condiciones hasta `SI Tamaño=MEDIANO Y Peludo=SÍ Y Edad=JOVEN ENTONCES Clase=LEÓN`; si el corrector sigue la letra del anexo, mostrá ese desarrollo. Se eliminan los casos cubiertos y se repite: en la segunda pasada se llega a `SI Peludo=SÍ Y Tamaño=GRANDE ENTONCES Clase=LEÓN` (cuando un atributo restante tiene igual p/t para todos sus valores, la regla queda como está). Luego se continúa igual para la clase NO LEÓN.
 
 **Diferencia clave**: 1R elige *un* atributo y clasifica todo con él (simple, rápido, sorprendentemente competitivo); PRISM genera reglas exactas por clase mediante cobertura sucesiva.
 
@@ -951,7 +951,7 @@ Durante el funcionamiento, ante una entrada se calcula $\lVert E_k - W_j \rVert$
 
 ### 15.1 Origen y definición
 
-- Primeras ideas: tesis de **J. D. Bagley**; en 1967 influyó en **J. H. Holland**, pionero de los AG.
+- 📖 **Cátedra**: las primeras ideas surgieron de la tesis de J. D. Bagley (1967), que 'influyó' en J. H. Holland, pionero de los AG. ✅ **Corroborado**: la relación es la inversa — Bagley fue doctorando de Holland; su tesis de 1967 (donde se acuñó el término 'algoritmo genético') se escribió bajo la supervisión de Holland, quien es el creador y pionero de los AG.
 - Un sistema biológico eficiente desarrolla **estrategias exitosas de adaptación** para lograr su supervivencia: sobreviven los más aptos.
 - Los AG **simulan la evolución de una población de individuos** mediante un **proceso iterativo** aplicado sobre un conjunto de estructuras. Cada estructura está compuesta de características que definen la **aptitud** del individuo en su entorno.
 - Pueden concebirse como **métodos de optimización**: encontrar el máximo (o el valor más cercano al máximo) de una **función de aptitud** f asignada a cada individuo: $f(x_0) = \max_{x \in X} f(x)$.
@@ -1259,4 +1259,4 @@ En el cursado nuevo también son evaluables **algoritmos genéticos** (§15: exp
 
 ---
 
-*Documento generado a partir de los materiales de la cátedra (slides cursado nuevo 2024/2025, resúmenes previos y bibliografía de referencia). Los parciales 2023 de `parciales/` quedan sin resolver, para autoevaluación.*
+*Documento generado a partir de los materiales de la cátedra (slides cursado nuevo 2024/2025, resúmenes previos y bibliografía de referencia). Los parciales 2023 de `parciales/` quedan sin resolver, para autoevaluación — con una excepción deliberada: la teoría de separabilidad lineal de §12.4 (AND/OR de n variables), imprescindible para la fe de erratas, coincide con preguntas de esos parciales.*
