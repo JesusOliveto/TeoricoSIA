@@ -2,6 +2,35 @@
 
 > Resumen integral de la materia, construido a partir de: slides del cursado nuevo (clases 0 a 9 + anexos), slides del cursado viejo (como respaldo), los dos resúmenes previos (`SIA_Resumen_Parcial_1.pdf` y `SIA_Resumen_Parcial_2.pdf`), la guía "De dónde estudiar", la bibliografía de la cátedra y los parciales/recuperatorios 2023.
 
+## Menú rápido
+
+**Parte I — 1er parcial:**
+[1. Intro a la IA](#1-introducción-a-la-inteligencia-artificial) ·
+[2. Agentes inteligentes](#2-agentes-inteligentes) ·
+[3. Aprendizaje automático](#3-aprendizaje-automático--fundamentos) ·
+[4. Árboles de decisión](#4-árboles-de-decisión-tdidt) ·
+[5. 1R y PRISM](#5-algoritmos-generadores-de-reglas-1r-y-prism) ·
+[6. WEKA](#6-weka) ·
+[7. Métricas de evaluación](#7-evaluación-de-clasificadores-métricas-de-weka) ·
+[8. Clustering y escalado](#8-clustering-aprendizaje-no-supervisado)
+
+**Parte II — 2do parcial:**
+[9. Regresión lineal](#9-regresión-lineal) ·
+[10. Redes neuronales](#10-redes-neuronales--fundamentos) ·
+[11. Hopfield](#11-modelo-de-hopfield) ·
+[12. Perceptrón](#12-perceptrón) ·
+[13. Backpropagation](#13-redes-multicapa--backpropagation) ·
+[14. Kohonen](#14-redes-competitivas--red-de-kohonen) ·
+[15. Algoritmos genéticos](#15-algoritmos-genéticos-ag) ·
+[16. Evolucionarios y AG paralelos](#16-algoritmos-evolucionarios-y-ag-paralelos-cursado-nuevo--clase-8) ·
+[17. Sistemas expertos](#17-sistemas-expertos-cursado-nuevo--clase-9)
+
+**Para repasar:**
+[Convención de notación](#convención-de-notación) ·
+[Mapa de la materia](#mapa-de-la-materia) ·
+[🎯 Mapa de examen](#18-mapa-de-examen-sin-resoluciones--los-parciales-son-tu-práctica) ·
+[Formulario rápido](#19-formulario-rápido)
+
 ## Convención de notación
 
 - **Texto sin marca** = contenido fiel al material de la cátedra (slides, anexos, resúmenes), sin conflicto con la teoría estándar.
