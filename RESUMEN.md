@@ -7,6 +7,8 @@
 - **Texto sin marca** = contenido fiel al material de la cátedra (slides, anexos, resúmenes), sin conflicto con la teoría estándar.
 - **📖 Cátedra** = lo que dice textualmente el material de la cátedra, en los puntos donde difiere de la teoría corroborada.
 - **✅ Corroborado** = corrección o ampliación verificada con la bibliografía estándar, que difiere de (o no figura en) el material de la cátedra.
+- **🎯 en un título** = ese punto fue **pregunta textual en los parciales/recuperatorios 2023**: no te puede faltar.
+- <mark>Texto resaltado</mark> = la frase que es **la respuesta** de esa pregunta de examen (si solo te acordás de algo, que sea esto).
 
 Cuando aparecen ambas marcas juntas, **estudiá la versión ✅** y tené presente la 📖 por si el enunciado o el corrector siguen la letra de las slides: desarrollar la justificación completa en la hoja te cubre en ambos casos.
 
@@ -175,7 +177,7 @@ Se busca que un agente tome decisiones sobre el curso más apropiado para resolv
 3. **Renacimiento (1976–1986)**: exploración de diferentes estrategias, *knowledge-intensive learning*, primeras aplicaciones exitosas.
 4. **Desarrollo (1986–actualidad)**: aprendizaje conexionista (backpropagation), sistemas multiestrategia, comparaciones experimentales.
 
-### 3.4 Medidas de actuación del aprendizaje automático
+### 3.4 🎯 Medidas de actuación del aprendizaje automático
 
 **(Pregunta de recuperatorio)** Las principales medidas de actuación son:
 
@@ -195,11 +197,11 @@ Se busca que un agente tome decisiones sobre el curso más apropiado para resolv
 - **Algoritmos genéticos**: evolución de poblaciones de soluciones.
 - **Conexionismo**: redes neuronales artificiales.
 
-**Por tipo de supervisión (los dos/tres grandes grupos — pregunta de recuperatorio):**
+**🎯 Por tipo de supervisión (los dos/tres grandes grupos — pregunta de recuperatorio):**
 
-1. **Supervisado**: el algoritmo se entrena con un **histórico de datos etiquetados** y "aprende" a asignar la etiqueta de salida adecuada a un nuevo valor (predice la salida). Se usa típicamente para **clasificación** y **regresión**.
+1. **Supervisado**: <mark>el algoritmo se entrena con un **histórico de datos etiquetados** y "aprende" a asignar la etiqueta de salida adecuada a un nuevo valor</mark> (predice la salida). Se usa típicamente para **clasificación** y **regresión**.
    - Ejemplos: detector de spam, árboles de decisión (**ID3, C4.5, J48**), regresión lineal, perceptrón, backpropagation.
-2. **No supervisado**: **no se dispone de datos etiquetados**; se conocen las entradas pero no hay salida asociada. Tiene **carácter exploratorio**: busca estructura oculta en los datos.
+2. **No supervisado**: <mark>**no se dispone de datos etiquetados**; se conocen las entradas pero no hay salida asociada. Tiene **carácter exploratorio**</mark>: busca estructura oculta en los datos.
    - Ejemplos: **clustering o agrupamiento** (K-means, EM, Cobweb), redes de Kohonen, Hopfield.
    - ⚠️ Cuidado con las **correlaciones espurias**: que dos variables se agrupen o correlacionen no implica causalidad.
 3. **Por refuerzo**: el agente aprende interactuando con el entorno mediante **premios y castigos** (recompensas); no se le dice qué acción es correcta, lo descubre por prueba y error.
@@ -230,14 +232,14 @@ TDIDT = *Top-Down Induction of Decision Trees* (inducción descendente de árbol
 - El aprendizaje de árboles es **sencillo, fácil de implementar y poderoso**; es el ejemplo clásico de aprendizaje **supervisado inductivo**.
 - Un árbol recibe un objeto o situación descrita por un **conjunto de atributos** y regresa una **decisión** (la clase).
 
-### 4.2 Partes constitutivas (pregunta de parcial)
+### 4.2 🎯 Partes constitutivas (pregunta de parcial)
 
 - **Nodo raíz**: el atributo con mayor ganancia de información; punto de entrada del árbol.
 - **Nodos internos**: cada uno corresponde a una **prueba sobre un atributo**.
 - **Ramas (arcos)**: etiquetadas con los **posibles valores** del atributo del nodo del que salen.
 - **Hojas**: especifican el **valor de la clase** (la decisión final).
 
-### 4.3 Reglas de decisión (pregunta de parcial)
+### 4.3 🎯 Reglas de decisión (pregunta de parcial)
 
 Para obtener las reglas de un árbol se recorre **cada camino desde la raíz hasta cada hoja**, conjugando con AND las condiciones (atributo = valor) de cada rama atravesada; la hoja da el consecuente:
 
@@ -279,7 +281,7 @@ ID3(R, C, S):
 
 La clave del algoritmo es **elegir en cada paso el atributo con mayor ganancia de información**.
 
-### 4.5 Cálculo de la información: información total, entropía y ganancia
+### 4.5 🎯 Cálculo de la información: información total, entropía y ganancia
 
 **(Ejercicio seguro de parcial — cae siempre)**
 
@@ -467,7 +469,7 @@ sunny,85,85,FALSE,no
 
 ## 7. Evaluación de clasificadores (métricas de WEKA)
 
-### 7.1 Matriz de confusión
+### 7.1 🎯 Matriz de confusión
 
 Herramienta que permite **visualizar el desempeño** de un algoritmo de aprendizaje supervisado. Con dos clases:
 
@@ -478,7 +480,7 @@ Herramienta que permite **visualizar el desempeño** de un algoritmo de aprendiz
 
 Los aciertos (TP y TN) quedan en la **diagonal principal**; los errores (FP y FN) fuera de ella.
 
-### 7.2 Métricas derivadas (fórmulas + interpretación)
+### 7.2 🎯 Métricas derivadas (fórmulas + interpretación)
 
 | Métrica | Fórmula | Qué mide |
 |---|---|---|
@@ -490,7 +492,7 @@ Los aciertos (TP y TN) quedan en la **diagonal principal**; los errores (FP y FN
 | **Precisión (Precision)** | $TP/(TP+FP)$ | Porcentaje de las predicciones positivas que son correctas |
 | **F-measure** | $2 \cdot \frac{Precision \cdot Cobertura}{Precision + Cobertura}$ | Caracteriza con un único valor la bondad del clasificador (media armónica de precisión y cobertura) |
 
-**Advertencia clave sobre la exactitud** (cae en los parciales): en conjuntos de datos **poco equilibrados no es una métrica útil**. Si se intenta predecir una enfermedad rara y el algoritmo clasifica a **todos** como sanos, puede tener 99% de exactitud y ser **totalmente inútil** (no detecta ni un enfermo).
+**Advertencia clave sobre la exactitud** (cae en los parciales): <mark>en conjuntos de datos **poco equilibrados no es una métrica útil**: si el algoritmo clasifica a **todos** como sanos ante una enfermedad rara, puede tener 99% de exactitud y ser **totalmente inútil** (no detecta ni un enfermo)</mark>.
 
 En matrices de más de dos clases: el TPR de una clase es el elemento de la diagonal dividido por la suma de su **fila**; el FPR es la suma de su **columna** menos la diagonal, dividida por la suma de las filas de las otras clases.
 
@@ -643,7 +645,7 @@ graph TD
 
 **Formulación**: los objetos son vectores reales de $d$ dimensiones; se construyen k grupos $S=\{S_1,...,S_k\}$ minimizando $\sum_{i=1}^{k}\sum_{x_j \in S_i} \lVert x_j - \mu_i \rVert^2$.
 
-**Características (lista de parcial):**
+**🎯 Características (lista de parcial):**
 
 - Solo **datos numéricos**.
 - Usa **distancia cuadrática** (euclídea al cuadrado).
@@ -681,7 +683,7 @@ ALGORITMO k_medias(datos, k):                  // traza: datos {1,2,3,10,11,12},
 
 **Mejora K-medias usando gaussianas**: en lugar de asignaciones duras, cada dato tiene un **grado de pertenencia** probabilístico a cada cluster (campanas de Gauss).
 
-**Características (lista de parcial):**
+**🎯 Características (lista de parcial):**
 
 - Mejora K-medias con **gaussianas**.
 - Permite un número de clases **NO fijo**.
@@ -726,7 +728,7 @@ graph LR
   - **Acuity**: medida de error de un nodo; controla el **factor de ramificación**.
   - **Cut-off**: evita el **crecimiento desmesurado** del número de clusters (poda).
 
-### 8.5 Normalización y escalado
+### 8.5 🎯 Normalización y escalado
 
 Al usar cualquier algoritmo de clustering es **buena idea normalizar** los datos, porque los grupos se forman **a partir de distancias**: si hay atributos con escalas muy diferentes, **los de escala mayor dominarán las distancias**.
 
@@ -743,7 +745,7 @@ PARA cada x en {2, 5, 8, 10}:                  // min = 2, max = 10, rango = 8
 // 2 → (2−2)/8 = 0  ·  5 → 3/8 = 0,375  ·  8 → 6/8 = 0,75  ·  10 → 8/8 = 1
 ```
 
-  **Qué significa escalar con este método** (pregunta de examen): transformar los valores para confinarlos en un rango fijo [0,1], de modo que atributos con escalas muy distintas queden comparables y ninguno domine las distancias.
+  **Qué significa escalar con este método** (pregunta de examen): <mark>transformar los valores para confinarlos en un rango fijo [0,1], de modo que atributos con escalas muy distintas queden comparables y ninguno domine las distancias</mark>.
 
 - **Escalado estándar (StandardScaler) / normalización estadística**: a cada dato se le **resta la media** y se lo **divide por la desviación típica**, de forma que todas las características compartan una misma media (0) y desviación (1):
 
@@ -771,16 +773,16 @@ $$\hat{y} = ax + b \qquad \equiv \qquad h_\theta(x) = \theta_1 x + \theta_0$$
 
 donde $\theta_1$ (o $a$) es la **pendiente** y $\theta_0$ (o $b$) la **intercepción u ordenada al origen**; $\hat{y}$ es la estimación de $y$ según el modelo.
 
-### 9.2 ¿Cómo debe ser el dataset? (pregunta de parcial)
+### 9.2 🎯 ¿Cómo debe ser el dataset? (pregunta de parcial)
 
 1. **Relación lineal** entre las variables.
 2. **Suficientes datos** (mínimo ~30 observaciones).
 3. Variables **continuas**.
 4. **Poca multicolinealidad** (las independientes no deben estar fuertemente correlacionadas entre sí).
 
-### 9.3 Función a minimizar y descenso por el gradiente (pregunta de parcial)
+### 9.3 🎯 Función a minimizar y descenso por el gradiente (pregunta de parcial)
 
-El algoritmo se basa en **minimizar el Error Cuadrático Medio (MSE)** siguiendo el principio del **descenso por el gradiente**, que busca minimizar la **función coste** $J(\theta)$:
+<mark>El algoritmo se basa en **minimizar el Error Cuadrático Medio (MSE)** siguiendo el principio del **descenso por el gradiente**</mark>, que busca minimizar la **función coste** $J(\theta)$:
 
 $$MSE = J(\theta) = \frac{1}{2n}\sum_{i=1}^{n}\left(\hat{y}^{(i)} - y^{(i)}\right)^2 = \frac{1}{2n}\sum_{i=1}^{n}\left(h_\theta(x^{(i)}) - y^{(i)}\right)^2$$
 
@@ -836,7 +838,7 @@ Con X = matriz donde cada ejemplo es una fila y cada columna un atributo (sin ol
 - **Underfitting (subajuste)**: el modelo **no es capaz de capturar** la relación entre entrada y salida → alto índice de errores tanto en entrenamiento como en datos no vistos.
 - **Overfitting (sobreajuste)**: el modelo **se ajusta exactamente a los datos de entrenamiento** → no puede hacer predicciones precisas sobre ningún dato distinto del de entrenamiento.
 
-### 9.6 Medidas a tener en cuenta (preguntas de parcial)
+### 9.6 🎯 Medidas a tener en cuenta (preguntas de parcial)
 
 **Coeficiente de correlación (R)**: medida que indica el **nivel de asociación** entre las variables dependiente e independiente. Es **adimensional**:
 
@@ -845,7 +847,7 @@ Con X = matriz donde cada ejemplo es una fila y cada columna un atributo (sin ol
 - $R > 0$: relación **directa** (al aumentar x, aumenta y).
 - $R < 0$: relación **inversa** (al aumentar una, disminuye la otra).
 
-**Coeficiente de determinación (R²)**: medida que indica **porcentualmente el cambio** de la variable dependiente respecto a la independiente. Da valores **entre 0 y 1**; mientras más cerca de 1, mejor (mayor proporción de la variabilidad explicada por el modelo).
+**Coeficiente de determinación (R²)**: medida que indica **porcentualmente el cambio** de la variable dependiente respecto a la independiente. <mark>Da valores **entre 0 y 1**; mientras más cerca de 1, mejor (mayor proporción de la variabilidad explicada por el modelo)</mark>.
 
 | Medida | Descripción |
 |---|---|
@@ -870,7 +872,7 @@ Para salida continua también existen árboles: en WEKA, el algoritmo **M5P** (d
 
 Rama de la IA que **toma como modelo la mente humana**, intentando simular por computadora el funcionamiento del cerebro. Se inspira en una forma "primitiva" de representación del conocimiento y el razonamiento: **la neurona y sus relaciones**. Muchas neuronas conectadas en varias **capas** dan un potencial enorme para resolver casi cualquier tipo de problema.
 
-### 10.2 La neurona biológica (pregunta de parcial)
+### 10.2 🎯 La neurona biológica (pregunta de parcial)
 
 Partes principales y funcionamiento:
 
@@ -879,7 +881,7 @@ Partes principales y funcionamiento:
 - **Axón**: **transporta** las señales de salida a los terminales axónicos (rama principal que se ramifica en su extremo).
 - **Terminales sinápticos/axónicos**: **distribuyen** la información a un nuevo conjunto de neuronas (liberan neurotransmisores).
 
-Funcionamiento (aclaración informal de la cátedra): las señales que llegan por las dendritas pueden ser **excitatorias o inhibitorias**; si la **suma ponderada** de éstas, realizada en el cuerpo, **supera el umbral de activación** en tiempo suficiente, la neurona **se dispara** enviando un impulso por su axón.
+Funcionamiento (aclaración informal de la cátedra): <mark>las señales que llegan por las dendritas pueden ser **excitatorias o inhibitorias**; si la **suma ponderada** de éstas, realizada en el cuerpo, **supera el umbral de activación** en tiempo suficiente, la neurona **se dispara** enviando un impulso por su axón</mark>.
 
 Datos: el cerebro humano tiene ~10¹⁵ conexiones. Las señales son de dos tipos: **eléctrica** (generada por la neurona, viaja por el axón) y **química** (entre terminales axónicos de una neurona y dendritas de otra).
 
@@ -898,7 +900,7 @@ Una RNA está compuesta por:
 | **Ocultas** | Generan el procesado y la representación interna de la información |
 | **De salida** | Dan la respuesta del sistema |
 
-### 10.4 La neurona artificial (equivalencia con la biológica — pregunta de parcial)
+### 10.4 🎯 La neurona artificial (equivalencia con la biológica — pregunta de parcial)
 
 | Neurona biológica | Neurona artificial |
 |---|---|
@@ -932,7 +934,7 @@ Funcionamiento (con j = neurona observada, i = neurona conectada):
 
 Una **memoria asociativa** (analogía física de la memoria): memoriza patrones y, ante una entrada parecida (incluso **parcial o incompleta**), evoluciona hasta el patrón almacenado más similar.
 
-### 11.2 Características (lista de parcial — cae siempre)
+### 11.2 🎯 Características (lista de parcial — cae siempre)
 
 - Red neuronal **monocapa**.
 - Suele manejar valores de **[1, −1]** (bipolares).
@@ -943,7 +945,7 @@ Una **memoria asociativa** (analogía física de la memoria): memoriza patrones 
 - Usa función de activación **tipo escalón** para el modelo discreto.
 - Aprendizaje **no supervisado de tipo Hebbiano**: $\Delta w_{ij} = y_i \cdot y_j$.
 - Muy buena para **reconocer patrones**.
-- **Capacidad**: se estima empíricamente que **cada 7 neuronas se puede almacenar 1 patrón**; regla general: $\text{cantidad de patrones} = 0{,}14 \cdot N$ (N = cantidad de neuronas).
+- **Capacidad**: <mark>se estima empíricamente que **cada 7 neuronas se puede almacenar 1 patrón**</mark>; regla general: $\text{cantidad de patrones} = 0{,}14 \cdot N$ (N = cantidad de neuronas).
 
 **Gráfico correcto de una red de Hopfield de 4 neuronas** (para el ejercicio "¿el gráfico es correcto?"): todas conectadas con todas, ninguna consigo misma —
 
@@ -966,7 +968,7 @@ Con N neuronas debe haber $\binom{N}{2} = N(N-1)/2$ conexiones (aquí 6): si fal
 - Puede evolucionar a la salida **más parecida** pese a recibir entradas parciales o incompletas.
 - La información de entrada debe codificarse como **vector**; cada neurona recibe **un elemento** del vector.
 
-### 11.4 Aprendizaje (cálculo de la matriz W)
+### 11.4 🎯 Aprendizaje (cálculo de la matriz W)
 
 El mecanismo es **no supervisado u off-line**: la red calcula la matriz de pesos W a partir de un conjunto de patrones de ejemplo que se pretende que memorice, y luego entra en funcionamiento.
 
@@ -974,7 +976,7 @@ $$W = \sum_{k=1}^{m} E_k^T E_k - m \cdot I$$
 
 Se calcula el producto de cada patrón (vector fila) por su transpuesta, se suman todos los productos y **se resta la identidad** (multiplicada por la cantidad de patrones) **porque las neuronas no pueden conectarse consigo mismas** → todos los elementos de la diagonal principal quedan en **0**.
 
-**(Pregunta de parcial)** ¿Qué significa la matriz W? Representa las **conexiones sinápticas entre las neuronas** y determina la **fuerza de esas conexiones** (es donde reside el conocimiento de la red). ¿Qué significa que la diagonal sea 0? Que **no se permite la conexión de una neurona consigo misma**: por eso toda posición con i = j vale siempre 0.
+**(Pregunta de parcial)** ¿Qué significa la matriz W? <mark>Representa las **conexiones sinápticas entre las neuronas** y determina la **fuerza de esas conexiones** (es donde reside el conocimiento de la red)</mark>. ¿Qué significa que la diagonal sea 0? <mark>Que **no se permite la conexión de una neurona consigo misma**: por eso toda posición con i = j vale siempre 0</mark>.
 
 ### 11.5 Funcionamiento (reconocimiento)
 
@@ -1043,7 +1045,7 @@ Ejemplos linealmente separables: compuertas **AND** y **OR** (existe una recta q
   x2 ─────w2────╯
 ```
 
-### 12.3 Algoritmo de entrenamiento (pregunta de parcial)
+### 12.3 🎯 Algoritmo de entrenamiento (pregunta de parcial)
 
 1. **Inicializar** los pesos con valores aleatorios (pequeños).
 2. Para cada patrón de entrada, **calcular la salida**.
@@ -1072,9 +1074,9 @@ ALGORITMO entrenar_perceptron(patrones):       // AND: (0,0)→0 (0,1)→0 (1,0)
 // pesos giran en círculos — esa es la falla del Perceptrón, hecha algoritmo.
 ```
 
-### 12.4 El problema XOR — cuándo falla el Perceptrón (pregunta de parcial)
+### 12.4 🎯 El problema XOR — cuándo falla el Perceptrón (pregunta de parcial)
 
-- El Perceptrón **falla ante problemas que NO son linealmente separables**. El caso emblemático es la compuerta **XOR**: no existe ninguna recta que separe los puntos {(0,1),(1,0)} de {(0,0),(1,1)}.
+- <mark>El Perceptrón **falla ante problemas que NO son linealmente separables**. El caso emblemático es la compuerta **XOR**: no existe ninguna recta que separe los puntos {(0,1),(1,0)} de {(0,0),(1,1)}</mark>.
 
 ```
   x2
@@ -1136,13 +1138,13 @@ donde $N_{entren}$ = número de patrones de entrenamiento, $E_{tolerable}$ = err
   - ✅ **Corroborado**: la regla original de Baum y Haussler (1989) usa la **suma** en el denominador (es la forma escrita arriba).
   - 📖 **Cátedra**: en la transcripción de las slides el separador del denominador es ambiguo y podría leerse como producto ($N_{entrada} \cdot N_{salida}$).
 
-### 13.3 Funciones de activación (pregunta de parcial)
+### 13.3 🎯 Funciones de activación (pregunta de parcial)
 
 - El Perceptrón usa **escalón**; Backpropagation necesita funciones **continuas y diferenciables** (para poder derivar el error):
 - **Sigmoide**: $salida = \frac{1}{1+e^{-suma}}$ → produce valores entre **0 y 1** (salidas "probabilísticas").
   - Si suma = 0 → salida = **0,5**; si la suma crece → tiende a **1**; si decrece → tiende a **0**.
 - **Tangente hiperbólica**: produce valores entre **−1 y 1**.
-- ¿Por qué éstas? Porque son **continuas y diferenciables**, requisito para propagar el error mediante derivadas.
+- ¿Por qué éstas? <mark>Porque son **continuas y diferenciables**, requisito para propagar el error mediante derivadas</mark>.
 
 ```
 escalon(s)  = 1 si s > 0; si no, 0             // Perceptrón — NO diferenciable (salta)
@@ -1158,7 +1160,7 @@ tanh(s)                                        // −1 a 1 — misma forma de S
 //   g'(s) = g(s) · (1 − g(s))  → por eso los deltas de backprop usan y·(1−y)
 ```
 
-### 13.4 Funcionamiento simplificado del algoritmo (pregunta de parcial)
+### 13.4 🎯 Funcionamiento simplificado del algoritmo (pregunta de parcial)
 
 - Comienza con un conjunto de **pesos aleatorios**.
 - La red **ajusta sus pesos cada vez que ve un par entrada/salida**.
@@ -1207,7 +1209,7 @@ ALGORITMO backpropagation(pares (x, d)):       // XOR: (0,0)→0 (0,1)→1 (1,0)
 
 Nota: según los pesos iniciales, la red puede caer en un **mínimo local** (las salidas quedan clavadas cerca de 0,5 y el error no baja más) — un fenómeno propio del descenso por gradiente que el Perceptrón no tiene; el límite del Perceptrón es otro (la separabilidad lineal).
 
-### 13.6 Perceptrón vs. Backpropagation (comparación de parcial)
+### 13.6 🎯 Perceptrón vs. Backpropagation (comparación de parcial)
 
 | Perceptrón | Perceptrón multicapa + Backpropagation |
 |---|---|
@@ -1233,7 +1235,7 @@ Nota: según los pesos iniciales, la red puede caer en un **mínimo local** (las
 - **LVQ (Learning Vector Quantization)**: para vectores de entrada de **una sola dimensión**.
 - **TPM (Topology Preserving Map) o SOM (Self-Organizing Map)**: para vectores de entrada **bidimensionales o incluso tridimensionales** (en TPM).
 
-### 14.3 Estructura y características (lista de parcial)
+### 14.3 🎯 Estructura y características (lista de parcial)
 
 - Red **bicapa**: N neuronas de **entrada** y M de **salida**.
 - Cada una de las N entradas se conecta con las M salidas mediante conexiones **feedforward**.
@@ -1257,9 +1259,9 @@ graph LR
     s2 -. inhibición lateral .- s3
 ```
 
-### 14.4 La función "sombrero mexicano" (pregunta de parcial)
+### 14.4 🎯 La función "sombrero mexicano" (pregunta de parcial)
 
-La influencia de cada neurona de salida sobre las demás se modela con una función de tipo **sombrero mexicano** (ondícula de Ricker): representa la **influencia lateral** de la neurona p sobre la neurona j. Sus ejes son: **interacción lateral (Y)** vs. **distancia entre neuronas (X)** — excita fuertemente a las vecinas cercanas, inhibe a las intermedias y no afecta a las lejanas.
+La influencia de cada neurona de salida sobre las demás se modela con una función de tipo **sombrero mexicano** (ondícula de Ricker): <mark>representa la **influencia lateral** de la neurona p sobre la neurona j. Sus ejes son: **interacción lateral (Y)** vs. **distancia entre neuronas (X)** — excita fuertemente a las vecinas cercanas, inhibe a las intermedias y no afecta a las lejanas</mark>.
 
 La salida de una neurona j ante un vector de entrada $E_k$ combina la parte feedforward y las interacciones laterales; la red **evoluciona hasta alcanzar un estado estable donde solo hay una neurona activa**.
 
@@ -1267,7 +1269,7 @@ La salida de una neurona j ante un vector de entrada $E_k$ combina la parte feed
 
 Durante el funcionamiento, ante una entrada se calcula $\lVert E_k - W_j \rVert$, una **medida de la diferencia entre el vector de entrada y el vector de pesos** de las conexiones que llegan a cada neurona j: se pretende **encontrar el dato aprendido más parecido al de entrada** para averiguar qué neurona se activará.
 
-### 14.6 Algoritmo de aprendizaje (pregunta de parcial)
+### 14.6 🎯 Algoritmo de aprendizaje (pregunta de parcial)
 
 1. **Inicializar los pesos** $w_{ij}$ con valores aleatorios pequeños y **fijar la zona inicial de vecindad** entre las neuronas de salida.
 2. **Presentar una entrada** $E_k$ cuyas componentes son valores continuos.
