@@ -10,7 +10,7 @@
 
 Cuando aparecen ambas marcas juntas, **estudiá la versión ✅** y tené presente la 📖 por si el enunciado o el corrector siguen la letra de las slides: desarrollar la justificación completa en la hoja te cubre en ambos casos.
 
-Además: los **diagramas** están en Mermaid (se renderizan en GitHub y en VS Code con la extensión *Markdown Preview Mermaid Support*), y los bloques de **Python** son ejecutables tal cual (solo librería estándar) — todos reproducen los números de los ejemplos del documento, así podés correrlos y experimentar.
+Además: los **diagramas** están en Mermaid (se renderizan en GitHub y en VS Code con la extensión *Markdown Preview Mermaid Support*), y cada fórmula o algoritmo tiene su **pseudocódigo paso a paso** con los números del ejemplo como traza — el mismo desarrollo "fórmula → pasos → resultado" que hay que escribir a mano en el parcial.
 
 ## Mapa de la materia
 
@@ -354,46 +354,33 @@ graph TD
 
 Reglas equivalentes (una por hoja, §4.3): `SI Tamaño=GRANDE Y Peludo=SÍ → LEÓN` · `SI Tamaño=GRANDE Y Peludo=NO → NO LEÓN` · `SI Tamaño=MEDIANO → LEÓN` · `SI Tamaño=PEQUEÑO → NO LEÓN`.
 
-**El cálculo en Python** (ejecutable; reproduce todos los valores de arriba):
+**La fórmula como procedimiento** (pseudocódigo con la traza del ejemplo):
 
-```python
-import math
-
-def informacion(p, n):
-    """I(p;n) en bits. Un subconjunto puro (p=0 o n=0) da 0."""
-    total = p + n
-    resultado = 0.0
-    for casos in (p, n):
-        if casos > 0:
-            prob = casos / total
-            resultado -= prob * math.log2(prob)
-    return resultado
-
-# Tabla del león: (peludo, edad, tamaño, clase)
-tabla = [
-    ("SÍ","VIEJO","GRANDE","LEÓN"), ("NO","JOVEN","GRANDE","NO"),
-    ("SÍ","JOVEN","MEDIANO","LEÓN"), ("SÍ","VIEJO","PEQUEÑO","NO"),
-    ("SÍ","JOVEN","PEQUEÑO","NO"), ("SÍ","JOVEN","GRANDE","LEÓN"),
-    ("NO","JOVEN","PEQUEÑO","NO"), ("NO","VIEJO","GRANDE","NO"),
-]
-
-def ganancia(idx):
-    """G(A) = I(p;n) - E(A) para el atributo en la columna idx."""
-    p = sum(1 for f in tabla if f[3] == "LEÓN")
-    n = len(tabla) - p
-    total = informacion(p, n)                    # I(3;5)
-    entropia = 0.0
-    for v in {f[idx] for f in tabla}:            # cada valor del atributo
-        sub = [f for f in tabla if f[idx] == v]
-        p_i = sum(1 for f in sub if f[3] == "LEÓN")
-        entropia += len(sub) / len(tabla) * informacion(p_i, len(sub) - p_i)
-    return total - entropia
-
-print(f"I(3;5)    = {informacion(3, 5):.4f}")    # 0.9544
-print(f"G(peludo) = {ganancia(0):.4f}")          # 0.3476 (≈ 0,3475 con los redondeos de la slide)
-print(f"G(edad)   = {ganancia(1):.4f}")          # 0.0032 (≈ 0,0033 ídem)
-print(f"G(tamaño) = {ganancia(2):.4f}")          # 0.4544 → mayor ganancia: raíz del árbol
 ```
+FUNCIÓN informacion(p, n):                     // I(p;n)
+    total ← p + n
+    resultado ← 0
+    PARA cada cantidad c en {p, n}:
+        SI c > 0:                              // un subconjunto puro aporta 0
+            prob ← c / total
+            resultado ← resultado − prob · log2(prob)
+    DEVOLVER resultado                         // informacion(3, 5) = 0,9544
+
+ALGORITMO ganancia(atributo A):
+    p ← positivos de la tabla                  // 3 LEÓN
+    n ← negativos de la tabla                  // 5 NO LEÓN
+    total ← informacion(p, n)                  // I(3;5) = 0,9544
+    entropia ← 0
+    PARA cada valor v de A:                    // Tamaño: GRANDE, MEDIANO, PEQUEÑO
+        Sv ← ejemplos con A = v                // GRANDE: 4 casos (2 LEÓN, 2 NO LEÓN)
+        pv ← positivos de Sv;  nv ← negativos de Sv
+        entropia ← entropia + |Sv|/(p+n) · informacion(pv, nv)
+                                               // E(Tamaño) = 4/8·I(2;2) + 1/8·I(1;0) + 3/8·I(0;3)
+                                               //           = 0,5·1 + 0 + 0 = 0,5
+    DEVOLVER total − entropia                  // G(Tamaño) = 0,9544 − 0,5 = 0,4544
+```
+
+Se repite `ganancia` para cada atributo y **el de mayor valor es la raíz**; en cada rama se vuelve a aplicar el mismo procedimiento sobre el subconjunto correspondiente (sin el atributo ya usado).
 
 ---
 
@@ -531,32 +518,26 @@ En matrices de más de dos clases: el TPR de una clase es el elemento de la diag
 - *FOR X*: "el X% de las predicciones negativas son incorrectas (positivos omitidos)".
 - *Precisión X*: "de todo lo que el modelo predijo como positivo, el X% es correcto".
 
-**Todas las métricas en Python** (reproduce el ejemplo de arriba):
+**Todas las métricas paso a paso** (pseudocódigo con la traza del ejemplo):
 
-```python
-import math
-
-def metricas(TP, FN, FP, TN):
-    total = TP + FN + FP + TN
-    return {
-        "Exactitud":    (TP + TN) / total,
-        "TPR (recall)": TP / (TP + FN),
-        "TNR":          TN / (TN + FP),
-        "FPR":          FP / (FP + TN),
-        "FOR":          FN / (FN + TN),
-        "Precisión":    TP / (TP + FP),
-    }
-
-m = metricas(TP=40, FN=10, FP=20, TN=130)
-prec, rec = m["Precisión"], m["TPR (recall)"]
-m["F-measure"] = 2 * prec * rec / (prec + rec)          # media armónica
-m["MCC"] = (40*130 - 20*10) / math.sqrt((40+20)*(40+10)*(130+20)*(130+10))
-
-for nombre, valor in m.items():
-    print(f"{nombre}: {valor:.3f}")
-# Exactitud 0.850 · TPR 0.800 · TNR 0.867 · FPR 0.133
-# FOR 0.071 · Precisión 0.667 · F-measure 0.727 · MCC 0.630
 ```
+ALGORITMO metricas(matriz de confusión):
+    TP, FN, FP, TN ← celdas de la matriz       // 40, 10, 20, 130
+    total ← TP + FN + FP + TN                  // 200
+
+    Exactitud ← (TP + TN) / total              // 170/200  = 0,85
+    TPR       ← TP / (TP + FN)                 //  40/50   = 0,80   (fila de los positivos reales)
+    TNR       ← TN / (TN + FP)                 // 130/150  = 0,867  (fila de los negativos reales)
+    FPR       ← FP / (FP + TN)                 //  20/150  = 0,133
+    FOR       ← FN / (FN + TN)                 //  10/140  = 0,071  (columna "predicho negativo")
+    Precisión ← TP / (TP + FP)                 //  40/60   = 0,667  (columna "predicho positivo")
+
+    F ← 2·Precisión·TPR / (Precisión + TPR)    // 2·0,667·0,80/1,467 = 0,727 (media armónica)
+    MCC ← (TP·TN − FP·FN) /
+          √((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN))   // 5000/√(60·50·150·140) = 5000/7937 = 0,63
+```
+
+Truco para no perderse: TPR y TNR se leen por **fila** (lo real); Precisión y FOR se leen por **columna** (lo predicho).
 
 ### 7.3 Curva ROC (Receiver Operating Characteristic)
 
@@ -608,11 +589,15 @@ $$\kappa = \frac{p_o - p_e}{1 - p_e}$$
 
 **Ejemplo de la cátedra** (2 médicos evalúan depresión en 50 personas): coinciden en 36 de 50 → $p_o = 0{,}72$. Evaluador 1 dice "no deprimido" al 50% y evaluador 2 al 46% → azar "no deprimido" = 0,5 × 0,46 = 0,23; azar "deprimido" = 0,5 × 0,54 = 0,27 → $p_e = 0{,}23 + 0{,}27 = 0{,}50$. Entonces $\kappa = (0{,}72-0{,}50)/(1-0{,}50)$ (✅ valor exacto: **0,44**; 📖 el anexo lo redondea a 0,4).
 
-```python
-p_o = 36 / 50                       # concordancia observada
-p_e = 0.50 * 0.46 + 0.50 * 0.54     # azar: "no deprimido" + "deprimido"
-kappa = (p_o - p_e) / (1 - p_e)
-print(f"po={p_o}, pe={p_e}, kappa={kappa:.2f}")   # po=0.72, pe=0.5, kappa=0.44
+```
+ALGORITMO kappa:
+    po ← coincidencias entre evaluadores / total          // 36/50 = 0,72
+    PARA cada categoría c:
+        pe_c ← proporción(evaluador1 dice c) · proporción(evaluador2 dice c)
+                                               // "no deprimido": 0,50 · 0,46 = 0,23
+                                               // "deprimido":    0,50 · 0,54 = 0,27
+    pe ← Σ pe_c                                // 0,23 + 0,27 = 0,50
+    DEVOLVER (po − pe) / (1 − pe)              // (0,72 − 0,50) / (1 − 0,50) = 0,44
 ```
 
 **Interpretación (Landis & Koch, 1977):**
@@ -675,28 +660,21 @@ graph TD
 - Cuanto más grande es k, la varianza intra-cluster **tiende a disminuir**; cuanto menor la distancia intra-cluster, más **compactos** los clusters.
 - Se busca el valor de k que satisfaga que **un incremento de k no mejore sustancialmente** la distancia media intra-cluster (el "codo" de la curva).
 
-**K-medias completo en Python** (caso 1D para ver el algoritmo desnudo):
+**K-medias paso a paso** (pseudocódigo con una traza 1D para ver el algoritmo desnudo):
 
-```python
-import random
-
-def k_medias(datos, k, iteraciones=100):
-    centroides = random.sample(datos, k)              # 2. plantar semillas
-    for _ in range(iteraciones):
-        grupos = [[] for _ in range(k)]
-        for x in datos:                               # 3. asignar al más cercano
-            i = min(range(k), key=lambda c: (x - centroides[c]) ** 2)
-            grupos[i].append(x)
-        nuevos = [sum(g) / len(g) if g else centroides[i]
-                  for i, g in enumerate(grupos)]      # 4. mover a la media
-        if nuevos == centroides:                      # 5. convergió
-            break
-        centroides = nuevos
-    return centroides, grupos
-
-random.seed(3)
-centroides, grupos = k_medias([1, 2, 3, 10, 11, 12], k=2)
-print(centroides, grupos)   # [2.0, 11.0] [[1, 2, 3], [10, 11, 12]]
+```
+ALGORITMO k_medias(datos, k):                  // traza: datos {1,2,3,10,11,12}, k = 2
+    centroides ← k datos elegidos al azar      // supongamos {3, 10}
+    REPETIR:
+        PARA cada dato x:                      // 3. asignación
+            asignar x al centroide con menor distancia²
+                                               // {1,2,3} van con 3 · {10,11,12} van con 10
+        PARA cada grupo g:                     // 4. actualización
+            centroide(g) ← media de los datos de g
+                                               // media{1,2,3} = 2 · media{10,11,12} = 11
+    HASTA que los centroides no cambien        // 2ª vuelta: mismas asignaciones,
+                                               // mismas medias → convergió
+    DEVOLVER centroides y grupos               // {2, 11} con grupos {1,2,3} y {10,11,12}
 ```
 
 ### 8.3 EM (Expectation-Maximization)
@@ -759,11 +737,10 @@ $$x' = \frac{x - x_{min}}{x_{max} - x_{min}}$$
 
   Ejemplo: para los valores {2, 5, 8, 10} → min = 2, max = 10 → escalados: 0; 0,375; 0,75; 1. El mínimo siempre queda en 0 y el máximo en 1.
 
-```python
-datos = [2, 5, 8, 10]
-mn, mx = min(datos), max(datos)
-escalados = [(x - mn) / (mx - mn) for x in datos]
-print(escalados)   # [0.0, 0.375, 0.75, 1.0]
+```
+PARA cada x en {2, 5, 8, 10}:                  // min = 2, max = 10, rango = 8
+    x' ← (x − min) / (max − min)
+// 2 → (2−2)/8 = 0  ·  5 → 3/8 = 0,375  ·  8 → 6/8 = 0,75  ·  10 → 8/8 = 1
 ```
 
   **Qué significa escalar con este método** (pregunta de examen): transformar los valores para confinarlos en un rango fijo [0,1], de modo que atributos con escalas muy distintas queden comparables y ninguno domine las distancias.
@@ -826,26 +803,23 @@ $$\frac{\partial}{\partial \theta_1} J(\theta) = \frac{1}{n}\sum_{i=1}^{n}\left[
 
 **Algoritmo**: mientras los θ sigan cambiando, calcular ambas derivadas y actualizar $\theta_0$ y $\theta_1$ simultáneamente con la regla anterior.
 
-**Descenso por el gradiente en Python** (datos con relación exacta y = 2x + 1; el algoritmo debe descubrir θ₁ = 2 y θ₀ = 1):
+**El descenso por el gradiente como procedimiento** (traza con datos que cumplen y = 2x + 1 exacto; el algoritmo debe descubrirlo):
 
-```python
-xs = [0, 1, 2, 3, 4]
-ys = [1, 3, 5, 7, 9]                  # y = 2x + 1
-n = len(xs)
-t0, t1, alfa = 0.0, 0.0, 0.05         # arranque en 0 y tasa de aprendizaje
-
-for paso in range(5000):
-    errores = [t1 * x + t0 - y for x, y in zip(xs, ys)]     # h(x) - y
-    d0 = sum(errores) / n                                   # ∂J/∂θ0
-    d1 = sum(e * x for e, x in zip(errores, xs)) / n        # ∂J/∂θ1
-    t0, t1 = t0 - alfa * d0, t1 - alfa * d1                 # actualización simultánea
-
-costo = sum((t1 * x + t0 - y) ** 2 for x, y in zip(xs, ys)) / (2 * n)
-print(f"theta0={t0:.3f}  theta1={t1:.3f}  J={costo:.6f}")
-# theta0=1.000  theta1=2.000  J=0.000000  → encontró la recta y minimizó el MSE
+```
+ALGORITMO regresion_lineal(pares (x, y)):      // {(0,1), (1,3), (2,5), (3,7), (4,9)}
+    θ0 ← 0;  θ1 ← 0;  α ← 0,05                 // arranque en cero, tasa de aprendizaje
+    REPETIR hasta converger:
+        // derivadas parciales evaluadas con los θ actuales
+        d0 ← (1/n) · Σ (θ1·x + θ0 − y)         // promedio de los errores h(x) − y
+        d1 ← (1/n) · Σ (θ1·x + θ0 − y) · x     // errores ponderados por x
+        // actualización SIMULTÁNEA de ambos parámetros
+        θ0 ← θ0 − α · d0
+        θ1 ← θ1 − α · d1
+    DEVOLVER θ0, θ1                            // converge a θ0 = 1, θ1 = 2 → y = 2x + 1
+                                               // con J(θ) = 0: ajuste perfecto, MSE mínimo
 ```
 
-Para experimentar: subí `alfa` a 0,4 y mirá cómo el coste **oscila o diverge** (el paso se "pasa" del mínimo); bajala a 0,001 y necesitarás muchas más iteraciones — es exactamente el compromiso de la tasa de aprendizaje descrito arriba.
+Sobre α: con α grande (p. ej. 0,4) cada paso **se pasa del mínimo** y el coste oscila o diverge; con α muy chica (0,001) converge igual pero necesita muchísimas más iteraciones — ese es el compromiso de la tasa de aprendizaje descrito arriba.
 
 ### 9.4 Algoritmo vectorizado (múltiples variables)
 
@@ -1013,29 +987,26 @@ Dado un patrón de prueba T:
 
 **Ejemplo de la cátedra**: con patrones de 4 componentes, para T1 se obtiene F(6,6,6,−6) = [1,1,1,−1] = T1 → convergió en un paso. Para T2 = [−1,−1,−1,−1]: primera pasada da [−1,−1,−1,1] ≠ entrada; segunda pasada da otra vez [−1,−1,−1,1] → convergió al patrón E2 = [−1,−1,−1,1] (reconoció la entrada ruidosa como E2).
 
-**Hopfield completo en Python** (aprendizaje + reconocimiento; reproduce el ejemplo):
+**Hopfield paso a paso** (aprendizaje + reconocimiento, con la traza del ejemplo):
 
-```python
-E1 = [1, 1, 1, -1]
-E2 = [-1, -1, -1, 1]
-patrones = [E1, E2]
-n = len(E1)
+```
+ALGORITMO aprender(patrones E1..Em):           // E1 = [1,1,1,−1] · E2 = [−1,−1,−1,1]
+    W ← Σ Ek^T · Ek − m·I                      // fuera de la diagonal: W[i][j] = Σ Ek[i]·Ek[j]
+                                               //        [ 0  2  2 −2]
+                                               //  W  =  [ 2  0  2 −2]
+                                               //        [ 2  2  0 −2]
+                                               //        [−2 −2 −2  0]   ← diagonal en 0
 
-# W = Σ Ek^T·Ek - m·I  →  la diagonal queda directamente en 0
-W = [[0 if i == j else sum(E[i] * E[j] for E in patrones)
-      for j in range(n)] for i in range(n)]
-print(W)   # [[0,2,2,-2], [2,0,2,-2], [2,2,0,-2], [-2,-2,-2,0]]
+ALGORITMO recordar(entrada T):
+    REPETIR:
+        salida ← escalón(T · W)                // componente > 0 → 1 · componente < 0 → −1
+        SI salida = T: DEVOLVER T              // salida = entrada → convergió
+        T ← salida                             // si no, realimentar y repetir
 
-def recordar(T):
-    while True:
-        salida = [1 if sum(T[i] * W[i][j] for i in range(n)) > 0 else -1
-                  for j in range(n)]      # T·W y función escalón
-        if salida == T:                   # salida == entrada → convergió
-            return salida
-        T = salida                        # si no, realimentar y repetir
-
-print(recordar([1, 1, 1, -1]))      # [1, 1, 1, -1]  → reconoce E1 en un paso
-print(recordar([-1, -1, -1, -1]))   # [-1, -1, -1, 1] → la entrada ruidosa converge a E2
+// recordar([1,1,1,−1]):    T·W = (6, 6, 6, −6) → [1,1,1,−1] = entrada → E1 en 1 paso
+// recordar([−1,−1,−1,−1]): 1ª pasada → [−1,−1,−1,1] ≠ entrada → realimentar
+//                          2ª pasada → [−1,−1,−1,1] = entrada → convergió a E2
+//                          (reconoció la entrada ruidosa como el patrón más parecido)
 ```
 
 **Cómo se usa la capacidad en la práctica** (método, no memorizar casos):
@@ -1081,28 +1052,25 @@ Ejemplos linealmente separables: compuertas **AND** y **OR** (existe una recta q
 
 En el ejemplo de la cátedra se usa una tasa de apreciación α = 0,5, se entrenan los primeros patrones y se testea con los restantes: cuando el error es 0 para todos los patrones de entrenamiento, termina el proceso.
 
-**El algoritmo completo en Python** (aprende la compuerta AND de 2 entradas):
+**El algoritmo paso a paso** (traza con la compuerta AND de 2 entradas):
 
-```python
-# Cada patrón: ((x0=1 bias, x1, x2), salida deseada)
-patrones = [((1, 0, 0), 0), ((1, 0, 1), 0), ((1, 1, 0), 0), ((1, 1, 1), 1)]
-w = [0.0, 0.0, 0.0]                  # 1. inicializar pesos
-eta = 0.5                            # tasa de aprendizaje
-
-convergio = False
-while not convergio:                 # 4. repetir hasta error 0 en todos
-    convergio = True
-    for x, d in patrones:
-        suma = sum(wi * xi for wi, xi in zip(w, x))
-        y = 1 if suma > 0 else 0     # 2. calcular la salida (escalón)
-        if y != d:                   # 3. si hay error, ajustar pesos
-            w = [wi + eta * (d - y) * xi for wi, xi in zip(w, x)]
-            convergio = False
-
-print(w)   # [-1.0, 1.0, 0.5] → recta separadora: 1·x1 + 0,5·x2 - 1 = 0
 ```
+ALGORITMO entrenar_perceptron(patrones):       // AND: (0,0)→0 (0,1)→0 (1,0)→0 (1,1)→1
+    w ← [0, 0, 0]                              // 1. inicializar (w0 = umbral/bias, x0 = 1)
+    η ← 0,5                                    //    tasa de aprendizaje
+    MIENTRAS alguna pasada tenga errores:      // 4. repetir hasta convergencia
+        PARA cada patrón (x, d):
+            y ← escalón(Σ wi·xi)               // 2. calcular la salida
+            SI y ≠ d:                          // 3. hay error → ajustar cada peso
+                w ← w + η · (d − y) · x
+    DEVOLVER w
 
-Converge en 6 pasadas porque el AND **es** linealmente separable. Si le das los patrones del XOR, el `while` **no termina nunca**: no existe recta, el algoritmo ajusta pesos en círculos — esa es la falla del Perceptrón hecha código.
+// Con el AND converge en 6 pasadas a w = [−1; 1; 0,5]
+// → recta separadora: 1·x1 + 0,5·x2 − 1 = 0
+//   (verificación: (1,1) da 1+0,5−1 = 0,5 > 0 → 1 ✓; los otros tres dan ≤ 0 → 0 ✓)
+// Con el XOR el MIENTRAS no termina NUNCA: la recta no existe y los
+// pesos giran en círculos — esa es la falla del Perceptrón, hecha algoritmo.
+```
 
 ### 12.4 El problema XOR — cuándo falla el Perceptrón (pregunta de parcial)
 
@@ -1176,19 +1144,18 @@ donde $N_{entren}$ = número de patrones de entrenamiento, $E_{tolerable}$ = err
 - **Tangente hiperbólica**: produce valores entre **−1 y 1**.
 - ¿Por qué éstas? Porque son **continuas y diferenciables**, requisito para propagar el error mediante derivadas.
 
-```python
-import math
+```
+escalon(s)  = 1 si s > 0; si no, 0             // Perceptrón — NO diferenciable (salta)
+sigmoide(s) = 1 / (1 + e^(−s))                 // 0 a 1 — continua y diferenciable
+tanh(s)                                        // −1 a 1 — misma forma de S
 
-def escalon(s):   return 1 if s > 0 else 0      # Perceptrón: NO diferenciable
-def sigmoide(s):  return 1 / (1 + math.exp(-s)) # 0 a 1; continua y diferenciable
-def tanh(s):      return math.tanh(s)           # -1 a 1; continua y diferenciable
+// Traza de la sigmoide:
+//   sigmoide(0)   = 1/(1+e⁰)  = 1/2   = 0,5   → suma 0 cae justo en el medio
+//   sigmoide(10)  = 1/(1+e⁻¹⁰) ≈ 0,9999       → satura hacia 1
+//   sigmoide(−10) = 1/(1+e¹⁰)  ≈ 0,0000       → satura hacia 0
 
-print(sigmoide(0))     # 0.5   → suma 0 cae justo en el medio
-print(sigmoide(10))    # 0.9999… → satura hacia 1
-print(sigmoide(-10))   # 0.0000… → satura hacia 0
-
-# La derivada de la sigmoide se expresa con su propia salida:
-# g'(s) = g(s)·(1 - g(s))  → por eso backprop usa y·(1-y) en los deltas
+// La derivada de la sigmoide se expresa con su propia salida:
+//   g'(s) = g(s) · (1 − g(s))  → por eso los deltas de backprop usan y·(1−y)
 ```
 
 ### 13.4 Funcionamiento simplificado del algoritmo (pregunta de parcial)
@@ -1216,46 +1183,29 @@ graph TD
 3. Inicializar las activaciones de las unidades umbral (**nunca deben cambiar**): $x_0 = 1$ y $h_0 = 1$.
 4. Elegir un par entrada/salida y asignar los niveles de activación a las unidades de entrada; propagar hacia adelante, calcular el error en la salida, retropropagar los errores ajustando primero $w2$ y luego $w1$; repetir con todos los pares hasta que el error sea aceptable.
 
-**Backpropagation completo en Python** — la red 2-2-1 que resuelve el XOR (lo que el Perceptrón solo no puede):
+**Backpropagation como procedimiento** — la red 2-2-1 que resuelve el XOR (lo que el Perceptrón solo no puede):
 
-```python
-import math, random
-random.seed(0)
+```
+ALGORITMO backpropagation(pares (x, d)):       // XOR: (0,0)→0 (0,1)→1 (1,0)→1 (1,1)→0
+    W1, W2 ← pesos aleatorios pequeños         // red 2-2-1 con bias en entrada y oculta
+    REPETIR hasta que el error sea aceptable:
+        PARA cada par (x, d):
+            // ---- paso hacia adelante ----
+            h ← sigmoide(W1 · x)               // activaciones de la capa oculta
+            y ← sigmoide(W2 · h)               // salida de la red
+            // ---- paso hacia atrás ----
+            δy ← (d − y) · y·(1−y)             // error de salida · derivada de la sigmoide
+            δh[i] ← δy · W2[i] · h[i]·(1−h[i]) // el error se DERIVA hacia cada oculta
+                                               // (proporcional al peso que la conecta)
+            W2 ← W2 + α · δy · h               // ajustar primero W2 (oculta→salida)...
+            W1 ← W1 + α · δh · x               // ...y después W1 (entrada→oculta)
 
-sig = lambda s: 1 / (1 + math.exp(-s))
-
-# 1-2. Red 2-2-1 con bias; pesos aleatorios pequeños
-# (📖 la cátedra sugiere iniciar en [-0,1, 0,1]; un rango algo mayor
-#  reduce el riesgo de quedar atrapado en un mínimo local del XOR)
-W1 = [[random.uniform(-0.5, 0.5) for _ in range(3)] for _ in range(2)]
-W2 = [random.uniform(-0.5, 0.5) for _ in range(3)]
-
-datos = [((0, 0), 0), ((0, 1), 1), ((1, 0), 1), ((1, 1), 0)]
-alfa = 0.5
-
-for epoca in range(20000):
-    for (x1, x2), d in datos:
-        # Paso hacia adelante
-        h = [sig(w[0]*x1 + w[1]*x2 + w[2]) for w in W1]
-        y = sig(W2[0]*h[0] + W2[1]*h[1] + W2[2])
-        # Paso hacia atrás: delta de salida y deltas de la capa oculta
-        delta_y = (d - y) * y * (1 - y)                       # error · derivada sigmoide
-        delta_h = [delta_y * W2[i] * h[i] * (1 - h[i]) for i in range(2)]
-        # Ajustar primero W2, después W1
-        W2 = [W2[0] + alfa*delta_y*h[0], W2[1] + alfa*delta_y*h[1], W2[2] + alfa*delta_y]
-        for i in range(2):
-            W1[i] = [W1[i][0] + alfa*delta_h[i]*x1,
-                     W1[i][1] + alfa*delta_h[i]*x2,
-                     W1[i][2] + alfa*delta_h[i]]
-
-for (x1, x2), d in datos:
-    h = [sig(w[0]*x1 + w[1]*x2 + w[2]) for w in W1]
-    y = sig(W2[0]*h[0] + W2[1]*h[1] + W2[2])
-    print(f"{x1} XOR {x2} = {y:.2f} (esperado {d})")
-# 0 XOR 0 = 0.01 · 0 XOR 1 = 0.99 · 1 XOR 0 = 0.99 · 1 XOR 1 = 0.01
+// Entrenada, la red responde ≈0 · ≈1 · ≈1 · ≈0: resolvió el XOR.
+// El delta usa y·(1−y) porque la sigmoide es diferenciable — con la
+// función escalón este paso sería imposible (no hay derivada).
 ```
 
-Para experimentar: probá `random.seed(1)` y vas a ver que dos salidas quedan clavadas en ~0,49 — la red cayó en un **mínimo local**, un fenómeno real de backpropagation que no existe en el Perceptrón (su problema es otro: la separabilidad).
+Nota: según los pesos iniciales, la red puede caer en un **mínimo local** (las salidas quedan clavadas cerca de 0,5 y el error no baja más) — un fenómeno propio del descenso por gradiente que el Perceptrón no tiene; el límite del Perceptrón es otro (la separabilidad lineal).
 
 ### 13.6 Perceptrón vs. Backpropagation (comparación de parcial)
 
@@ -1325,31 +1275,24 @@ Durante el funcionamiento, ante una entrada se calcula $\lVert E_k - W_j \rVert$
 4. Una vez localizada la vencedora j*, **actualizar los pesos** de las conexiones feedforward que llegan a **dicha neurona y a sus vecinas** (acercándolos a la entrada).
 5. **Repetir** hasta que los pesos se estabilicen y tiendan a un valor de error pequeño, **o por lo menos iterar un mínimo de 500 veces**.
 
-**La esencia competitiva en Python** (2 neuronas de salida "mapean" solas las 2 zonas de los datos, sin etiquetas):
+**La competencia como procedimiento** (2 neuronas de salida "mapean" solas las 2 zonas de los datos, sin etiquetas):
 
-```python
-import random
-random.seed(0)
-
-datos = [(0.1, 0.2), (0.15, 0.1), (0.9, 0.8), (0.8, 0.95)]   # dos zonas claras
-M = 2                                                # neuronas de salida
-W = [[random.random(), random.random()] for _ in range(M)]   # 1. pesos aleatorios
-alfa = 0.3
-
-def distancia2(a, b):
-    return sum((ai - bi) ** 2 for ai, bi in zip(a, b))
-
-for iteracion in range(500):                         # 5. mínimo 500 iteraciones
-    e = random.choice(datos)                         # 2. presentar una entrada
-    ganadora = min(range(M), key=lambda j: distancia2(e, W[j]))  # 3. competencia
-    W[ganadora] = [w + alfa * (x - w) for w, x in zip(W[ganadora], e)]  # 4. acercar pesos
-
-print([[round(w, 2) for w in neurona] for neurona in W])
-# [[0.9, 0.81], [0.11, 0.18]] → cada vector de pesos terminó en el
-# centro de una zona: una neurona "mapea" los datos altos y la otra los bajos
 ```
+ALGORITMO competencia_kohonen(datos):          // datos en dos zonas: cerca de (0,1; 0,1)
+                                               // y cerca de (0,9; 0,9)
+    W ← M vectores de pesos aleatorios         // 1. un vector por neurona de salida
+    REPETIR al menos 500 veces:                // 5. mínimo de iteraciones
+        e ← una entrada al azar                // 2. presentar una entrada
+        ganadora ← neurona j con menor ||e − Wj||     // 3. competencia: gana la
+                                               //    del vector de pesos más parecido
+        Wganadora ← Wganadora + α · (e − Wganadora)   // 4. acercar sus pesos a la
+                                               //    entrada (y los de sus VECINAS,
+                                               //    según el sombrero mexicano)
 
-(En la red real también se actualizan las **vecinas** de la ganadora con el sombrero mexicano; aquí se muestra la competencia pura para ver el mecanismo.)
+// Al final cada vector de pesos queda en el centro de una zona:
+// una neurona terminó cerca de (0,1; 0,15) y la otra cerca de (0,9; 0,85).
+// La red "mapeó" los grupos sin recibir ninguna etiqueta.
+```
 
 ---
 
@@ -1437,23 +1380,25 @@ $$copias(i) = R_{min} + 2\,\frac{(n-i)(1-R_{min})}{(n-1)}$$
 - **Cruza multipunto**: el cromosoma se considera un **anillo** y se eligen **n puntos de cruza aleatorios**. La cruza simple es el caso particular n=1.
 - **Cruza binomial**: para cada posición del hijo, se define $P_0$ = probabilidad de heredar el alelo **del padre** y $1-P_0$ = probabilidad de heredarlo **de la madre**.
 
-**Selección y cruza en Python** (reproduce los ejemplos de las slides):
+**Selección y cruza paso a paso** (con los ejemplos de las slides como traza):
 
-```python
-# Ranking (n=4, Rmin=0,75): reproduce la tabla de copias de la slide
-n, rmin = 4, 0.75
-for i in range(1, n + 1):
-    copias = rmin + 2 * (n - i) * (1 - rmin) / (n - 1)
-    print(f"posición {i}: {copias:.2f} copias")
-# posición 1: 1.25 (mejor = 2-Rmin) · 2: 1.08 · 3: 0.92 · 4: 0.75 (peor = Rmin)
-# La suma de copias da exactamente n (la población se mantiene)
+```
+ALGORITMO ranking(población, Rmin):            // traza: n = 4, Rmin = 0,75
+    ordenar la población por aptitud descendente
+    PARA cada posición i de 1 a n:
+        copias(i) ← Rmin + 2·(n−i)·(1−Rmin)/(n−1)
 
-# Ruleta: ranura del individuo con aptitud 576 sobre un total de 1170
-print(f"ranura: {576 / 1170:.1%}")        # 49.2% de la ruleta
+// i=1 (mejor): 0,75 + 2·3·0,25/3 = 1,25  = 2 − Rmin
+// i=2:         0,75 + 2·2·0,25/3 = 1,08
+// i=3:         0,75 + 2·1·0,25/3 = 0,92
+// i=4 (peor):  0,75 + 0          = 0,75  = Rmin
+// Σ copias = 4 = n → la población mantiene su tamaño
 
-# Cruza simple en el punto k=3: XYY|XY × YYX|XX
-p1, p2, k = "XYYXY", "YYXXX", 3
-print(p1[:k] + p2[k:], "y", p2[:k] + p1[k:])   # XYYXX y YYXXY
+RULETA:  ranura(individuo) ← aptitud / Σ aptitudes
+// aptitud 576 sobre un total de 1170 → 576/1170 = 49,2% de la ruleta
+
+CRUZA SIMPLE (punto k = 3):  XYY|XY × YYX|XX  →  hijos XYYXX  y  YYXXY
+// se corta en k y se intercambian los segmentos finales
 ```
 
 ### 15.8 Métodos de mutación
