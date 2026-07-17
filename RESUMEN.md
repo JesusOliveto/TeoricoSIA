@@ -29,7 +29,8 @@
 [Convención de notación](#convención-de-notación) ·
 [Mapa de la materia](#mapa-de-la-materia) ·
 [🎯 Mapa de examen](#18-mapa-de-examen-sin-resoluciones--los-parciales-son-tu-práctica) ·
-[Formulario rápido](#19-formulario-rápido)
+[Formulario rápido](#19-formulario-rápido) ·
+[Fichas de fórmulas](#20-repaso-de-fórmulas-calculables-fichas-de-estudio)
 
 ## Convención de notación
 
@@ -1679,6 +1680,201 @@ En el cursado nuevo también son evaluables **algoritmos genéticos** (§15: exp
 
 - Control nº esperado: $C_i = f_i/\bar{f}$ (decimales > 0,5 → +1 copia)
 - Ranking: $copias(i) = R_{min} + 2\frac{(n-i)(1-R_{min})}{n-1}$; mejor = $2-R_{min}$, peor = $R_{min}$, con $0 < R_{min} < 1$
+
+## 20. Repaso de fórmulas calculables (fichas de estudio)
+
+Todas las fórmulas con las que **se calcula algo** en la materia, juntas para aprenderlas y repasarlas. **Método**: tapá la ficha dejando visible solo el título, escribí de memoria la fórmula y el mini-ejemplo en una hoja, destapá y compará. Las que falles vuelven a la pasada siguiente. (El [formulario](#19-formulario-rápido) es la versión comprimida para el repaso final; estas fichas son para **aprenderlas**.)
+
+### 20.1 Información y árboles
+
+**Ficha 1 — Información total de la tabla**
+
+$$I(p;n) = -\frac{p}{p+n}\log_2\frac{p}{p+n} - \frac{n}{p+n}\log_2\frac{n}{p+n}$$
+
+- **Qué calcula**: la incertidumbre (en **bits**) de la clase en la tabla completa.
+- **Variables**: p = ejemplos positivos, n = negativos.
+- **Mini-ejemplo**: $I(3;5) = 0{,}531 + 0{,}424 = 0{,}9544$ bits.
+- **Casos borde para verificar**: subconjunto puro → 0 · mitad y mitad → 1 bit.
+
+**Ficha 2 — Entropía de un atributo**
+
+$$E(A) = \sum_{i=1}^{v} \frac{p_i+n_i}{p+n}\, I(p_i;n_i)$$
+
+- **Qué calcula**: el promedio **ponderado** de la información de cada valor del atributo.
+- **Variables**: $p_i, n_i$ = positivos/negativos del subconjunto con el valor i; el peso es el tamaño relativo de ese subconjunto.
+- **Mini-ejemplo**: $E(tamaño) = \frac{4}{8}(1) + \frac{1}{8}(0) + \frac{3}{8}(0) = 0{,}5$.
+
+**Ficha 3 — Ganancia de información**
+
+$$G(A) = I(p;n) - E(A)$$
+
+- **Qué calcula**: cuánta incertidumbre **elimina** conocer el valor de A. El atributo de mayor G es la **raíz** del árbol.
+- **Mini-ejemplo**: $G(tamaño) = 0{,}9544 - 0{,}5 = 0{,}4544$ → raíz (le gana a peludo 0,3475 y edad 0,0033).
+
+**Ficha 4 — Precisión de una regla (PRISM)**
+
+$$\frac{p}{t}$$
+
+- **Qué calcula**: qué tan "pura" es una condición candidata; p = instancias positivas cubiertas, t = total cubiertas.
+- **Regla de uso**: se agrega la condición de **mayor p/t** (empate → la de mayor p); p/t = 1 → regla perfecta.
+- **Mini-ejemplo**: Tamaño=MEDIANO → 1/1 = 1 ✓.
+
+### 20.2 Métricas de clasificación
+
+Todas con el mismo ejemplo (TP=40, FN=10, FP=20, TN=130, total 200):
+
+| Ficha | Métrica | Fórmula | Ejemplo | Truco para recordarla |
+|---|---|---|---|---|
+| 5 | Exactitud | $(TP+TN)/total$ | 170/200 = 0,85 | Diagonal sobre todo; **inútil con desbalance** |
+| 6 | TPR / Recall | $TP/(TP+FN)$ | 40/50 = 0,80 | **Fila** de los positivos reales |
+| 7 | TNR / Especificidad | $TN/(TN+FP)$ | 130/150 = 0,867 | **Fila** de los negativos reales |
+| 8 | FPR | $FP/(FP+TN)$ | 20/150 = 0,133 | Falsas alarmas sobre la fila negativa; FPR = 1 − TNR |
+| 9 | FOR | $FN/(FN+TN)$ | 10/140 = 0,071 | **Columna** "predicho negativo" |
+| 10 | Precisión | $TP/(TP+FP)$ | 40/60 = 0,667 | **Columna** "predicho positivo" |
+| 11 | F-measure | $2\cdot\frac{P\cdot R}{P+R}$ | 0,727 | Media **armónica** de Precisión y Recall |
+| 12 | MCC (✅ 4 celdas) | $\frac{TP\cdot TN - FP\cdot FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}$ | 0,63 | Diagonal buena menos diagonal mala, normalizada; −1 a +1 |
+
+**Ficha 13 — Kappa de Cohen**
+
+$$\kappa = \frac{p_o - p_e}{1 - p_e}$$
+
+- **Variables**: $p_o$ = proporción de coincidencias observadas; $p_e$ = azar (por cada categoría, producto de las proporciones de ambos evaluadores; luego se suman).
+- **Mini-ejemplo**: $p_o = 36/50 = 0{,}72$; $p_e = 0{,}5 \cdot 0{,}46 + 0{,}5 \cdot 0{,}54 = 0{,}50$; $\kappa = 0{,}22/0{,}50 = 0{,}44$ → concordancia **moderada** (Landis & Koch).
+
+### 20.3 Escalado y distancias
+
+**Ficha 14 — MinMaxScaler**
+
+$$x' = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+
+- **Qué hace**: confina los valores al rango [0,1]; el mínimo queda en 0 y el máximo en 1.
+- **Mini-ejemplo**: {2, 5, 8, 10} → 0 · 0,375 · 0,75 · 1.
+
+**Ficha 15 — Escalado estándar**
+
+$$x' = \frac{x - \mu}{\sigma}$$
+
+- **Qué hace**: centra en media 0 con desviación 1 (restar la media, dividir por la desviación típica).
+
+**Ficha 16 — Distancia euclídea (al cuadrado)**
+
+$$d^2(x, c) = \sum_i (x_i - c_i)^2$$
+
+- **Dónde se usa**: K-medias (dato vs. centroide) y Kohonen (entrada vs. vector de pesos $\lVert E_k - W_j \rVert$); gana la menor distancia.
+
+### 20.4 Regresión lineal
+
+**Ficha 17 — El modelo**
+
+$$h_\theta(x) = \theta_1 x + \theta_0$$
+
+- $\theta_1$ = pendiente, $\theta_0$ = ordenada al origen; la recta pasa por el centro de la nube.
+
+**Ficha 18 — Función de coste (MSE)**
+
+$$J(\theta) = \frac{1}{2n}\sum_{i=1}^{n}\left(h_\theta(x^{(i)}) - y^{(i)}\right)^2$$
+
+- **Qué calcula**: el promedio de los errores al cuadrado; es **lo que se minimiza** con descenso por el gradiente. J = 0 → ajuste perfecto.
+
+**Ficha 19 — Descenso por el gradiente**
+
+$$\theta_j \Leftarrow \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta) \qquad \text{con} \qquad \frac{\partial J}{\partial \theta_0} = \frac{1}{n}\sum(h-y) \quad y \quad \frac{\partial J}{\partial \theta_1} = \frac{1}{n}\sum(h-y)\cdot x$$
+
+- Actualización **simultánea** de ambos θ; α chica = lento y preciso, α grande = riesgo de divergir.
+
+**Ficha 20 — R y R² (rangos que hay que saber de memoria)**
+
+- **R** (correlación): 0 = independientes · 1 = relación lineal exacta · signo = directa/inversa.
+- **R²** (determinación): entre **0 y 1**, más cerca de 1 mejor (proporción de variabilidad explicada).
+
+### 20.5 Redes neuronales
+
+**Ficha 21 — Suma ponderada + activación (toda neurona)**
+
+$$suma_j = \sum_{i=0}^{n} w_{ij}\, x_i \qquad y_j = g(suma_j)$$
+
+- $x_0 = 1$ es el bias; escalón: 1 si suma > 0 (Perceptrón) · sigmoide/tanh (Backprop).
+
+**Ficha 22 — Matriz de pesos de Hopfield**
+
+$$W = \sum_{k=1}^{m} E_k^T E_k - m \cdot I$$
+
+- Producto de cada patrón por su transpuesta, sumados, **menos m·I** para dejar la diagonal en 0 (sin autoconexiones).
+- **Mini-ejemplo**: E1=[1,1,1,−1], E2=[−1,−1,−1,1] → fuera de la diagonal ±2, diagonal 0.
+
+**Ficha 23 — Capacidad de Hopfield (las dos direcciones)**
+
+$$patrones = 0{,}14 \cdot N \qquad \Leftrightarrow \qquad N = \frac{patrones}{0{,}14} \text{ (redondear ↑ a entero)}$$
+
+- Regla mnemónica: **cada 7 neuronas, 1 patrón**.
+
+**Ficha 24 — Aprendizaje del Perceptrón**
+
+$$\Delta w = \eta \cdot (d - y) \cdot x \qquad \text{y la recta separadora: } w_0 + w_1x_1 + w_2x_2 = 0$$
+
+- Solo se ajusta **cuando hay error** (d ≠ y); η = tasa de aprendizaje.
+- **Mini-ejemplo**: el AND converge a w = [−1; 1; 0,5] → recta $x_1 + 0{,}5x_2 - 1 = 0$.
+
+**Ficha 25 — Sigmoide y su derivada**
+
+$$g(s) = \frac{1}{1+e^{-s}} \qquad g'(s) = g(s)\cdot(1-g(s))$$
+
+- Valores 0 a 1; g(0) = **0,5**. La derivada se escribe con la propia salida → los deltas de backprop usan $y(1-y)$. Tanh: −1 a 1.
+
+**Ficha 26 — Deltas de Backpropagation (red 2-2-1)**
+
+$$\delta_y = (d-y)\cdot y(1-y) \qquad \delta_{h_i} = \delta_y \cdot W2_i \cdot h_i(1-h_i) \qquad W \Leftarrow W + \alpha\,\delta\,\cdot\text{entrada}$$
+
+- Orden: calcular error de salida → derivarlo a la oculta → ajustar **primero W2, después W1**.
+
+**Ficha 27 — Baum-Haussler (nodos ocultos)**
+
+$$N_{oculta} \leq \frac{N_{entren} \cdot E_{tolerable}}{N_{entrada} + N_{salida}}$$
+
+- ✅ Suma en el denominador (forma corroborada; 📖 en las slides el separador es ambiguo).
+
+**Ficha 28 — Actualización de Kohonen**
+
+$$W_{ganadora} \Leftarrow W_{ganadora} + \alpha\,(E_k - W_{ganadora})$$
+
+- La ganadora es la de **menor distancia** a la entrada; se actualizan ella **y sus vecinas** (sombrero mexicano); mínimo 500 iteraciones.
+
+### 20.6 Algoritmos genéticos
+
+**Ficha 29 — Control del número esperado**
+
+$$C_i = \frac{f_i}{\bar{f}}$$
+
+- Aptitud del individuo sobre la aptitud **promedio** = copias a asignar; decimales > 0,5 → se suma 1.
+
+**Ficha 30 — Selección por ranking**
+
+$$copias(i) = R_{min} + 2\,\frac{(n-i)(1-R_{min})}{(n-1)}$$
+
+- **Propiedades para verificar el cálculo**: mejor = $2-R_{min}$ · peor = $R_{min}$ · $\sum copias = n$ · $0 < R_{min} < 1$.
+- **Mini-ejemplo** (n=4, $R_{min}$=0,75): 1,25 · 1,08 · 0,92 · 0,75.
+
+**Ficha 31 — Ruleta**
+
+$$ranura_i = \frac{f_i}{\sum_j f_j}$$
+
+- **Mini-ejemplo**: aptitud 576 sobre 1170 total → 49,2% de la ruleta.
+
+### 20.7 Autoevaluación exprés (solo preguntas — las respuestas son las fichas)
+
+1. Escribí de memoria la fórmula de la información total y verificala con I(3;5).
+2. ¿Qué diferencia hay entre entropía de un atributo y ganancia? Escribí ambas.
+3. Con TP=40, FN=10, FP=20, TN=130: calculá exactitud, TPR, TNR, FPR, FOR y precisión **sin mirar**.
+4. ¿Cuáles métricas se leen por fila y cuáles por columna de la matriz de confusión?
+5. Escribí la fórmula de Kappa y qué significa cada p.
+6. Escalá {2, 5, 8, 10} con MinMax y explicá qué significa escalar.
+7. ¿Qué función minimiza la regresión lineal y con qué regla se actualizan los θ?
+8. ¿Entre qué valores se mueve R²? ¿Qué indica?
+9. Escribí la fórmula de W de Hopfield y explicá por qué se resta m·I.
+10. ¿Cuántos patrones almacena una red de 50 neuronas? ¿Cuántas neuronas para 3 patrones?
+11. Escribí la regla de aprendizaje del Perceptrón. ¿Cuándo se ajustan los pesos?
+12. ¿Cuánto vale la sigmoide en 0? ¿Cuál es su derivada y por qué le importa a backprop?
+13. Con n=4 y Rmin=0,75, calculá las copias por ranking y verificá que sumen 4.
 
 ---
 
