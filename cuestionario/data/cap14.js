@@ -1,0 +1,82 @@
+// Question bank: Chapter 14 - Redes competitivas - Kohonen (RESUMEN.md lines 1254-1330; calc ficha S20.5 lines 1790-1841, ficha 28)
+window.QUIZ_DATA = window.QUIZ_DATA || {};
+window.QUIZ_DATA[14] = {
+  title: 'Redes competitivas — Kohonen',
+  sets: [
+    {
+      name: 'Definiciones',
+      questions: [
+        { q: '¿Quién presentó la red de Kohonen y en qué año?', opts: ['Frank Rosenblatt, en 1958', 'Donald Hebb, en 1949', 'T. Kohonen, en 1982', 'John Hopfield, en 1982'], a: 2, exp: 'Ver §14.1.' },
+        { q: '¿En qué principio biológico se basa la red de Kohonen?', opts: ['En la memoria asociativa de patrones completos', 'En la propagación de errores hacia atrás', 'En la competencia entre árboles de decisión', 'En que el cerebro organiza neuronas en zonas o mapas bidimensionales (ej. sistema auditivo según frecuencia)'], a: 3, exp: 'Ver §14.1.' },
+        { q: '¿Qué es LVQ (Learning Vector Quantization)?', opts: ['Una variante de Kohonen para vectores de entrada de una sola dimensión', 'Una variante para vectores bidimensionales o tridimensionales', 'Un algoritmo de clasificación supervisada', 'Una función de activación continua'], a: 0, exp: 'Ver §14.2.' },
+        { q: '¿Qué es TPM (Topology Preserving Map) o SOM (Self-Organizing Map)?', opts: ['Una variante para vectores de una sola dimensión', 'Una variante de Kohonen para vectores de entrada bidimensionales o incluso tridimensionales', 'Un algoritmo supervisado de corrección de error', 'Una red monocapa sin conexiones laterales'], a: 1, exp: 'Ver §14.2.' },
+        { q: '¿Cuántas capas tiene la red de Kohonen?', opts: ['Monocapa', 'Tres capas: entrada, oculta y salida', 'Bicapa: entrada y salida', 'No tiene una estructura de capas definida'], a: 2, exp: 'Ver §14.3.' },
+        { q: '¿Qué tipo de conexiones hay entre las neuronas de entrada y las de salida?', opts: ['Laterales de inhibición', 'Recurrentes', 'No hay conexiones entre ambas capas', 'Feedforward'], a: 3, exp: 'Ver §14.3.' },
+        { q: '¿Qué tipo de conexiones hay entre las neuronas de salida entre sí?', opts: ['Laterales de inhibición (peso negativo)', 'Feedforward', 'Bidireccionales de excitación', 'No existen conexiones entre ellas'], a: 0, exp: 'Ver §14.3.' },
+        { q: '¿Qué tipo de valores maneja la red de Kohonen?', opts: ['Solo valores binarios [0,1]', 'Valores reales (continuos)', 'Solo valores bipolares [1,−1]', 'Solo números enteros'], a: 1, exp: 'Ver §14.3.' },
+        { q: '¿Qué tipo de aprendizaje usa la red de Kohonen?', opts: ['Supervisado con corrección de error', 'Por refuerzo', 'No supervisado, de tipo competitivo, off-line', 'No supervisado pero on-line'], a: 2, exp: 'Ver §14.3.' },
+        { q: '¿Qué significa "winner takes all" (la ganadora se lleva todo) en Kohonen?', opts: ['Que todas las neuronas de salida se activan por igual', 'Que la primera neurona siempre gana sin importar la entrada', 'Que se elige la neurona con mayor distancia a la entrada', 'Que solo una neurona de salida permanece activa ante una entrada dada (la ganadora)'], a: 3, exp: 'Ver §14.3.' }
+      ]
+    },
+    {
+      name: 'Cálculo',
+      questions: [
+        { q: 'Dos neuronas de salida tienen vectores de pesos W1=[1,2] y W2=[7,6]. Se presenta la entrada E=[4,6]. ¿Cuál es la distancia al cuadrado ‖E−W1‖²?', opts: ['16', '9', '5', '25'], a: 3, exp: 'Ver §14.5 y §20.5 ficha 28: (4−1)²+(6−2)²=9+16=25.' },
+        { q: 'Con los mismos vectores, ¿cuál es la distancia ‖E−W1‖ (raíz cuadrada de la anterior)?', opts: ['5', '25', '4', '3'], a: 0, exp: 'Ver §14.5: √25=5.' },
+        { q: '¿Cuál es la distancia al cuadrado ‖E−W2‖² entre E=[4,6] y W2=[7,6]?', opts: ['25', '9', '16', '3'], a: 1, exp: 'Ver §14.5: (4−7)²+(6−6)²=9+0=9.' },
+        { q: '¿Cuál es la distancia ‖E−W2‖?', opts: ['9', '5', '3', '4'], a: 2, exp: 'Ver §14.5: √9=3.' },
+        { q: 'Comparando ambas distancias (5 para W1 y 3 para W2), ¿qué neurona resulta ganadora?', opts: ['La neurona 1 (W1)', 'Ninguna, hay empate', 'No se puede determinar sin más datos', 'La neurona 2 (W2), por tener la menor distancia'], a: 3, exp: 'Ver §14.6: gana la neurona con el vector de pesos más parecido (menor distancia).' },
+        { q: 'Aplicando Wganadora ⇐ Wganadora+α·(E−Wganadora) con α=0,5 sobre W2=[7,6] y E=[4,6], ¿cuál es la primera componente del nuevo W2?', opts: ['5,5', '7', '4', '1,5'], a: 0, exp: 'Ver §20.5 ficha 28: 7+0,5·(4−7)=7−1,5=5,5.' },
+        { q: '¿Cuál es la segunda componente del nuevo W2?', opts: ['3', '6', '0', '12'], a: 1, exp: 'Ver §20.5 ficha 28: 6+0,5·(6−6)=6+0=6.' },
+        { q: '¿Qué ocurre con W1 (la neurona perdedora, sin vecindad definida en este ejemplo) tras esta iteración?', opts: ['Se actualiza igual que la ganadora', 'Se acerca a la entrada al doble de velocidad que W2', 'Permanece sin cambios: [1,2]', 'Se aleja de la entrada'], a: 2, exp: 'Ver §14.6: solo se actualizan la ganadora y sus vecinas.' },
+        { q: 'Si en cambio se usara α=1 (máximo) sobre W2=[7,6] y E=[4,6], ¿a qué valor quedaría el nuevo W2?', opts: ['Sin cambios, [7,6]', 'El promedio entre W2 y E, [5,5;6]', '[10,5;6]', 'Igual a la entrada, [4,6]'], a: 3, exp: 'Ver §20.5 ficha 28: con α=1, W+1·(E−W)=E.' },
+        { q: 'Si en cambio se usara α=0 (sin aprendizaje) sobre W2=[7,6], ¿qué ocurre?', opts: ['Permanece sin cambios: [7,6]', 'Se actualiza igual que con α=0,5', 'Queda exactamente en la entrada E', 'Se aleja de la entrada'], a: 0, exp: 'Ver §20.5 ficha 28: con α=0, el ajuste Δ=0·(E−W)=0.' }
+      ]
+    },
+    {
+      name: 'Comparaciones',
+      questions: [
+        { q: '¿Qué diferencia hay entre LVQ y TPM/SOM?', opts: ['LVQ maneja vectores de entrada de una sola dimensión; TPM/SOM maneja vectores bidimensionales o tridimensionales', 'Ambas variantes manejan exactamente el mismo tipo de vectores', 'TPM/SOM es para una dimensión y LVQ para varias', 'Ninguna de las dos maneja vectores continuos'], a: 0, exp: 'Ver §14.2.' },
+        { q: '¿Qué diferencia hay entre las conexiones feedforward y las conexiones laterales de la red de Kohonen?', opts: ['Ambos tipos de conexión son idénticos', 'Las feedforward van de entrada a salida; las laterales conectan las neuronas de salida entre sí con peso negativo (inhibición)', 'Las laterales van de entrada a salida y las feedforward conectan la salida consigo misma', 'No existen conexiones laterales en Kohonen'], a: 1, exp: 'Ver §14.3.' },
+        { q: 'En la función sombrero mexicano, ¿qué diferencia hay entre el efecto sobre neuronas CERCANAS, INTERMEDIAS y LEJANAS?', opts: ['Excita por igual a todas las neuronas, sin importar la distancia', 'Inhibe a las cercanas y excita a las lejanas', 'Excita fuertemente a las cercanas, inhibe a las intermedias y no afecta a las lejanas', 'Solo afecta a las neuronas lejanas'], a: 2, exp: 'Ver §14.4.' },
+        { q: '¿Qué diferencia hay entre los dos ejes de la función sombrero mexicano?', opts: ['Ambos ejes representan la distancia entre neuronas', 'El eje X representa la interacción lateral y el Y la distancia', 'Ninguno de los ejes tiene un significado definido', 'El eje Y representa la interacción lateral; el eje X representa la distancia entre neuronas'], a: 3, exp: 'Ver §14.4.' },
+        { q: 'Según el fundamento biológico, ¿qué diferencia hay entre lo que se hereda genéticamente y lo que se origina mediante el aprendizaje en la organización de mapas del cerebro?', opts: ['Parte de la organización es genéticamente heredada, pero gran parte se origina mediante el aprendizaje', 'Toda la organización es exclusivamente genética', 'Toda la organización se origina exclusivamente por aprendizaje, sin componente genética', 'No existe ninguna organización en mapas en el cerebro'], a: 0, exp: 'Ver §14.1.' },
+        { q: '¿Qué diferencia hay entre la cantidad de neuronas de entrada (N) y de salida (M) en la estructura bicapa?', opts: ['N y M representan siempre la misma cantidad de neuronas', 'N es la cantidad de neuronas de entrada y M la de salida; cada una de las N se conecta con las M mediante conexiones feedforward', 'M es la cantidad de neuronas de entrada y N la de salida', 'La estructura de Kohonen no distingue entre N y M'], a: 1, exp: 'Ver §14.3.' },
+        { q: '¿Qué diferencia hay entre el peso de las conexiones feedforward y el de las conexiones laterales?', opts: ['Ambos pesos son siempre positivos y fijos', 'El de las laterales se ajusta durante el aprendizaje y el de las feedforward es fijo y negativo', 'El de las feedforward (wij) se ajusta durante el aprendizaje y depende de las interacciones laterales; el de las laterales es negativo (de inhibición)', 'Ninguno de los dos pesos cambia nunca'], a: 2, exp: 'Ver §14.3.' },
+        { q: '¿Qué diferencia hay entre la actualización de la neurona ganadora y sus vecinas, frente a las neuronas lejanas?', opts: ['Todas las neuronas se actualizan por igual, sin importar la distancia', 'Solo las neuronas lejanas se actualizan', 'Ninguna neurona se actualiza durante el aprendizaje', 'La ganadora y sus vecinas actualizan sus pesos acercándose a la entrada; las lejanas no se actualizan'], a: 3, exp: 'Ver §14.6.' },
+        { q: '¿Qué diferencia hay entre la condición de parada por estabilización de los pesos y la condición de mínimo de iteraciones?', opts: ['Se repite hasta que los pesos se estabilicen con error pequeño, o al menos un mínimo de 500 iteraciones', 'Solo existe la condición de estabilización, sin mínimo de iteraciones', 'Solo existe el mínimo de 500 iteraciones, sin estabilización', 'Ambas condiciones son exactamente lo mismo'], a: 0, exp: 'Ver §14.6.' },
+        { q: '¿Qué diferencia hay entre el paso 1 del algoritmo (inicializar pesos) y fijar la zona de vecindad inicial?', opts: ['Son la misma acción exacta', 'Son dos acciones distintas dentro del mismo paso 1: inicializar wij con valores aleatorios pequeños, y por separado fijar la zona inicial de vecindad entre las neuronas de salida', 'La zona de vecindad se fija recién en el último paso del algoritmo', 'Los pesos nunca se inicializan de forma aleatoria'], a: 1, exp: 'Ver §14.6.' }
+      ]
+    },
+    {
+      name: 'Casos aplicados',
+      questions: [
+        { q: 'Un sistema de reconocimiento de voz agrupa señales similares sin ninguna etiqueta previa. ¿Qué tipo de aprendizaje describe esto, según la cátedra?', opts: ['Supervisado con corrección de error', 'No supervisado, de tipo competitivo', 'Por refuerzo', 'No supervisado pero necesita etiquetas parciales'], a: 1, exp: 'Ver §14.3.' },
+        { q: 'Se presenta un vector de entrada de una sola dimensión (una única medición continua por muestra). ¿Qué variante de Kohonen es la adecuada?', opts: ['TPM/SOM', 'Backpropagation', 'LVQ', 'Hopfield'], a: 2, exp: 'Ver §14.2.' },
+        { q: 'Se presenta un vector de entrada bidimensional (dos medidas continuas por muestra) y se busca preservar la topología. ¿Qué variante es la adecuada?', opts: ['LVQ', 'Perceptrón', 'Ninguna variante de Kohonen sirve para 2D', 'TPM/SOM'], a: 3, exp: 'Ver §14.2.' },
+        { q: 'Ante una entrada dada, tres neuronas de salida compiten y solo una permanece activa al final. ¿Qué principio describe este comportamiento?', opts: ['Winner takes all (la neurona ganadora)', 'Backpropagation del error', 'Memoria asociativa', 'Poda del árbol de decisión'], a: 0, exp: 'Ver §14.3.' },
+        { q: 'Un ingeniero observa que al actualizar los pesos de la neurona ganadora también se modifican levemente los pesos de las neuronas cercanas, pero no los de las lejanas. ¿Qué concepto explica este comportamiento?', opts: ['La regla de Baum-Haussler', 'La función sombrero mexicano y el concepto de vecindad', 'La matriz de pesos de Hopfield', 'El descenso por gradiente'], a: 1, exp: 'Ver §14.4 y §14.6.' },
+        { q: 'Se entrena una red de Kohonen y el proceso se detiene tras solo 50 iteraciones, sin que los pesos se hayan estabilizado. ¿Es esto correcto según el algoritmo?', opts: ['Sí, 50 iteraciones son suficientes siempre', 'Sí, si la red tiene menos de 5 neuronas de salida', 'No, se debe iterar como mínimo 500 veces', 'El algoritmo no tiene un mínimo de iteraciones definido'], a: 2, exp: 'Ver §14.6.' },
+        { q: 'Un desarrollador inicializa todos los pesos en exactamente 0, en vez de valores aleatorios pequeños. ¿Coincide esto con el paso 1 del algoritmo?', opts: ['Sí, es exactamente lo que indica el algoritmo', 'Solo es correcto si hay menos de 3 neuronas de salida', 'El algoritmo no especifica cómo inicializar los pesos', 'No, los pesos deben inicializarse con valores aleatorios pequeños'], a: 3, exp: 'Ver §14.6.' },
+        { q: 'Se presenta una entrada continua Ek y se calculan las distancias a cada vector de pesos Wj de las neuronas de salida. ¿Qué se busca determinar con esas distancias?', opts: ['La neurona ganadora: la más parecida (menor distancia) a la entrada', 'La cantidad total de neuronas de la red', 'El valor óptimo de la tasa de aprendizaje α', 'El número de capas ocultas necesarias'], a: 0, exp: 'Ver §14.5 y §14.6.' },
+        { q: 'Una aplicación de reconocimiento de texto manuscrito usa Kohonen para agrupar trazos similares sin etiquetas previas. ¿Es esto consistente con las aplicaciones mencionadas por la cátedra?', opts: ['No, Kohonen no se aplica a reconocimiento de patrones', 'Sí, es una de las aplicaciones citadas junto con reconocimiento de voz', 'Solo es válido para texto impreso, no manuscrito', 'No, esa aplicación corresponde solo a Hopfield'], a: 1, exp: 'Ver §14.1.' },
+        { q: 'Un analista propone que dos neuronas de salida tengan entre sí una conexión de peso POSITIVO (de excitación). ¿Es esto consistente con la estructura de Kohonen?', opts: ['Sí, así es como se describe la estructura', 'Solo es correcto si las neuronas son vecinas cercanas', 'No, las conexiones laterales entre neuronas de salida son de inhibición (peso negativo)', 'Las conexiones laterales no tienen signo definido'], a: 2, exp: 'Ver §14.3.' }
+      ]
+    },
+    {
+      name: 'Trampas de examen',
+      questions: [
+        { q: '¿La red de Kohonen usa aprendizaje SUPERVISADO o NO SUPERVISADO?', opts: ['Supervisado con corrección de error', 'Por refuerzo', 'No supervisado', 'Requiere validación cruzada'], a: 2, exp: 'Ver §14.3.' },
+        { q: '¿El aprendizaje de Kohonen es ON-LINE o OFF-LINE?', opts: ['On-line, en tiempo real', 'Mixto, alternando ambos modos', 'No se especifica en el resumen', 'Off-line'], a: 3, exp: 'Ver §14.3.' },
+        { q: '¿La red de Kohonen es MONOCAPA o BICAPA?', opts: ['Bicapa', 'Monocapa', 'Tres capas', 'No tiene estructura de capas'], a: 0, exp: 'Ver §14.3.' },
+        { q: '¿Las conexiones laterales entre neuronas de salida son de EXCITACIÓN o de INHIBICIÓN?', opts: ['Excitación (peso positivo)', 'Inhibición (peso negativo)', 'No existen conexiones laterales', 'Depende del valor de α'], a: 1, exp: 'Ver §14.3.' },
+        { q: '¿Gana la neurona con la MENOR o la MAYOR distancia a la entrada?', opts: ['La de mayor distancia', 'La primera neurona de la lista, sin importar la distancia', 'La de menor distancia', 'La que tenga más conexiones laterales'], a: 2, exp: 'Ver §14.6.' },
+        { q: '¿Se debe iterar un mínimo de 500 veces, o de 50 veces?', opts: ['50 veces', '5 veces', '1000 veces exactas', '500 veces'], a: 3, exp: 'Ver §14.6.' },
+        { q: '¿LVQ maneja vectores de UNA dimensión, o de DOS/TRES dimensiones?', opts: ['Una dimensión (TPM/SOM maneja 2D o 3D)', 'Dos o tres dimensiones', 'Cualquier cantidad de dimensiones por igual', 'LVQ no maneja vectores de entrada'], a: 0, exp: 'Ver §14.2.' },
+        { q: '¿La función sombrero mexicano EXCITA a las neuronas lejanas, o NO LAS AFECTA?', opts: ['Las excita fuertemente', 'No las afecta (excita a las cercanas, inhibe a las intermedias)', 'Las inhibe fuertemente', 'Las excita solo si son más de 10'], a: 1, exp: 'Ver §14.4.' },
+        { q: 'En Wganadora ⇐ Wganadora+α·(Ek−Wganadora), ¿se actualiza SOLO la neurona ganadora, o también sus VECINAS?', opts: ['Solo la ganadora, nunca sus vecinas', 'Todas las neuronas de la red por igual', 'También sus vecinas', 'Ninguna neurona se actualiza en este paso'], a: 2, exp: 'Ver §14.6 y §20.5 ficha 28.' },
+        { q: '¿Kohonen trabaja con valores REALES (continuos), o solo con valores BINARIOS?', opts: ['Solo valores binarios [0,1]', 'Solo valores bipolares [1,−1]', 'Solo números enteros positivos', 'Valores reales (continuos)'], a: 3, exp: 'Ver §14.3.' }
+      ]
+    }
+  ]
+};

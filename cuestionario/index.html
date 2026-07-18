@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuestionario Interactivo - TeoricoSIA</title>
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --text: #1c1e26;
+    --text-muted: #5a5f70;
+    --border: #dfe1e8;
+    --accent: #3457d5;
+    --accent-contrast: #ffffff;
+    --correct: #1e8e3e;
+    --correct-bg: #e6f4ea;
+    --incorrect: #c5221f;
+    --incorrect-bg: #fce8e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161f;
+      --surface: #1e212c;
+      --text: #e8e9ee;
+      --text-muted: #a3a7b7;
+      --border: #2c2f3d;
+      --accent: #7c9bff;
+      --accent-contrast: #0d0f16;
+      --correct: #6fcf97;
+      --correct-bg: #1c3324;
+      --incorrect: #f28b82;
+      --incorrect-bg: #3a1f1e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  #app {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3rem;
+  }
+  h1 { font-size: 1.5rem; margin: 0.5rem 0; }
+  h2.question { font-size: 1.15rem; margin: 1rem 0; }
+  .subtitle { color: var(--text-muted); margin-top: 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 480px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .card, .btn, .btn-next, .option, .back-link {
+    font: inherit;
+    cursor: pointer;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    color: var(--text);
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-num { font-size: 0.8rem; color: var(--text-muted); }
+  .card-title { font-weight: 600; }
+  .card-meta { font-size: 0.8rem; color: var(--text-muted); }
+  .back-link {
+    display: inline-block;
+    background: none;
+    border: none;
+    color: var(--accent);
+    padding: 0;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .progress {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    color: var(--text);
+  }
+  .option:hover:not(:disabled) { border-color: var(--accent); }
+  .option.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .option.incorrect { border-color: var(--incorrect); background: var(--incorrect-bg); color: var(--incorrect); }
+  .option.locked { cursor: default; }
+  .feedback { border-radius: 0.6rem; padding: 0.75rem 1rem; margin-bottom: 1rem; }
+  .feedback.is-correct { background: var(--correct-bg); color: var(--correct); }
+  .feedback.is-incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
+  .explanation { color: var(--text); font-size: 0.9rem; margin: 0.35rem 0 0; }
+  .btn, .btn-next {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.7rem 1.2rem;
+    font-weight: 600;
+  }
+  .btn-next { display: block; width: 100%; }
+  .score { font-size: 1.25rem; font-weight: 600; }
+  .review { display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
+  .review-item { border: 1px solid var(--border); border-radius: 0.6rem; padding: 0.75rem 1rem; }
+  .review-item.is-correct { border-left: 4px solid var(--correct); }
+  .review-item.is-incorrect { border-left: 4px solid var(--incorrect); }
+  .review-q { font-weight: 600; margin: 0 0 0.35rem; }
+  .review-a, .review-correct { margin: 0.15rem 0; font-size: 0.9rem; }
+  .review-correct { color: var(--correct); }
+  .review-exp { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--text-muted); }
+  .actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+  .actions .btn { flex: 1; }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Question banks: each populates window.QUIZ_DATA[N]. Missing files degrade gracefully. -->
+<script src="data/cap01.js"></script>
+<script src="data/cap02.js"></script>
+<script src="data/cap03.js"></script>
+<script src="data/cap04.js"></script>
+<script src="data/cap05.js"></script>
+<script src="data/cap06.js"></script>
+<script src="data/cap07.js"></script>
+<script src="data/cap08.js"></script>
+<script src="data/cap09.js"></script>
+<script src="data/cap10.js"></script>
+<script src="data/cap11.js"></script>
+<script src="data/cap12.js"></script>
+<script src="data/cap13.js"></script>
+<script src="data/cap14.js"></script>
+<script src="data/cap15.js"></script>
+<script src="data/cap16.js"></script>
+<script src="data/cap17.js"></script>
+<script src="validate.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Tolerate zero/partial banks: some/all data/capNN.js files may not exist yet.
+  window.QUIZ_DATA = window.QUIZ_DATA || {};
+
+  var SET_LABELS = ['Definiciones', 'Cálculo', 'Comparaciones', 'Casos aplicados', 'Trampas de examen'];
+
+  var state = {
+    view: 'home',    // home | sets | quiz | results
+    chapter: null,   // chapter number
+    setIndex: null,  // 0-4
+    order: [],       // per-question shuffle: { idxs: [origIdx x4], correctDisplay }
+    current: 0,      // current question index within the set
+    answers: []      // per question: null | { selected, correct }
+  };
+
+  var app = document.getElementById('app');
+
+  // Chapter numbers excluded for failing structural validation (populated at bootstrap).
+  var invalidChapters = {};
+
+  function getChapters() {
+    return Object.keys(window.QUIZ_DATA)
+      .map(function (k) { return parseInt(k, 10); })
+      .filter(function (n) {
+        var ch = window.QUIZ_DATA[n];
+        return !isNaN(n) && !invalidChapters[n] && ch && typeof ch === 'object' && Array.isArray(ch.sets);
+      })
+      .sort(function (a, b) { return a - b; });
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function goToSets(chapterNum) {
+    state.chapter = chapterNum;
+    state.view = 'sets';
+    render();
+  }
+
+  function startSet(chapterNum, setIdx) {
+    var chapter = window.QUIZ_DATA[chapterNum];
+    var set = chapter.sets[setIdx];
+    state.chapter = chapterNum;
+    state.setIndex = setIdx;
+    state.current = 0;
+    state.answers = set.questions.map(function () { return null; });
+    state.order = set.questions.map(function (q) {
+      var idxs = shuffle([0, 1, 2, 3]);
+      return { idxs: idxs, correctDisplay: idxs.indexOf(q.a) };
+    });
+    state.view = 'quiz';
+    render();
+  }
+
+  function selectAnswer(displayIdx) {
+    if (state.answers[state.current]) return; // already locked
+    var ord = state.order[state.current];
+    state.answers[state.current] = {
+      selected: displayIdx,
+      correct: displayIdx === ord.correctDisplay
+    };
+    render();
+  }
+
+  function nextQuestion() {
+    var set = window.QUIZ_DATA[state.chapter].sets[state.setIndex];
+    if (state.current < set.questions.length - 1) {
+      state.current++;
+    } else {
+      state.view = 'results';
+    }
+    render();
+  }
+
+  function retrySet() {
+    startSet(state.chapter, state.setIndex);
+  }
+
+  function backToSets() {
+    state.view = 'sets';
+    render();
+  }
+
+  function backToHome() {
+    state.view = 'home';
+    state.chapter = null;
+    state.setIndex = null;
+    render();
+  }
+
+  function renderHome() {
+    var chapters = getChapters();
+    if (chapters.length === 0) {
+      return '<div class="empty-state"><h1>Cuestionario Interactivo</h1>' +
+        '<p>No hay capítulos disponibles todavía.</p></div>';
+    }
+    var html = '<h1>Cuestionario Interactivo</h1>' +
+      '<p class="subtitle">Elige un capítulo para practicar.</p><div class="grid">';
+    chapters.forEach(function (n) {
+      var chapter = window.QUIZ_DATA[n];
+      html += '<button class="card" data-chapter="' + n + '">' +
+        '<span class="card-num">Cap. ' + n + '</span>' +
+        '<span class="card-title">' + escapeHtml(chapter.title) + '</span>' +
+        '</button>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderSets() {
+    var chapter = window.QUIZ_DATA[state.chapter];
+    var html = '<button class="back-link" data-action="home">&larr; Capítulos</button>';
+    html += '<h1>' + escapeHtml(chapter.title) + '</h1>' +
+      '<p class="subtitle">Elige un set de preguntas.</p><div class="grid">';
+    chapter.sets.forEach(function (set, i) {
+      var label = set.name || SET_LABELS[i] || ('Set ' + (i + 1));
+      html += '<button class="card" data-set="' + i + '">' +
+        '<span class="card-title">' + escapeHtml(label) + '</span>' +
+        '<span class="card-meta">' + set.questions.length + ' preguntas</span>' +
+        '</button>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderQuiz() {
+    var chapter = window.QUIZ_DATA[state.chapter];
+    var set = chapter.sets[state.setIndex];
+    var q = set.questions[state.current];
+    var ord = state.order[state.current];
+    var answer = state.answers[state.current];
+    var total = set.questions.length;
+    var scoreSoFar = state.answers.filter(function (a) { return a && a.correct; }).length;
+
+    var html = '<button class="back-link" data-action="sets">&larr; Sets</button>';
+    html += '<div class="progress">Pregunta ' + (state.current + 1) + ' / ' + total +
+      ' &middot; Aciertos: ' + scoreSoFar + '</div>';
+    html += '<h2 class="question">' + escapeHtml(q.q) + '</h2>';
+    html += '<div class="options">';
+    ord.idxs.forEach(function (origIdx, displayIdx) {
+      var cls = 'option';
+      if (answer) {
+        cls += ' locked';
+        if (displayIdx === ord.correctDisplay) cls += ' correct';
+        else if (displayIdx === answer.selected) cls += ' incorrect';
+      }
+      var letter = String.fromCharCode(65 + displayIdx);
+      html += '<button class="' + cls + '" data-opt="' + displayIdx + '"' + (answer ? ' disabled' : '') + '>' +
+        letter + '. ' + escapeHtml(q.opts[origIdx]) + '</button>';
+    });
+    html += '</div>';
+
+    if (answer) {
+      html += '<div class="feedback ' + (answer.correct ? 'is-correct' : 'is-incorrect') + '">' +
+        '<p>' + (answer.correct ? 'Correcto.' : 'Incorrecto.') + '</p>' +
+        '<p class="explanation">' + escapeHtml(q.exp) + '</p></div>';
+      html += '<button class="btn-next" data-action="next">' +
+        (state.current < total - 1 ? 'Siguiente' : 'Ver resultados') + '</button>';
+    }
+
+    return html;
+  }
+
+  function renderResults() {
+    var chapter = window.QUIZ_DATA[state.chapter];
+    var set = chapter.sets[state.setIndex];
+    var total = set.questions.length;
+    var score = state.answers.filter(function (a) { return a && a.correct; }).length;
+
+    var html = '<h1>Resultados</h1><p class="score">' + score + ' / ' + total + ' correctas</p>';
+    html += '<div class="review">';
+    set.questions.forEach(function (q, i) {
+      var ord = state.order[i];
+      var answer = state.answers[i];
+      var ok = answer && answer.correct;
+      html += '<div class="review-item ' + (ok ? 'is-correct' : 'is-incorrect') + '">' +
+        '<p class="review-q">' + (i + 1) + '. ' + escapeHtml(q.q) + '</p>' +
+        '<p class="review-a">Tu respuesta: ' +
+        escapeHtml(answer ? q.opts[ord.idxs[answer.selected]] : '(sin responder)') + '</p>';
+      if (!ok) {
+        html += '<p class="review-correct">Correcta: ' + escapeHtml(q.opts[q.a]) + '</p>';
+      }
+      html += '<p class="review-exp">' + escapeHtml(q.exp) + '</p></div>';
+    });
+    html += '</div><div class="actions">' +
+      '<button class="btn" data-action="retry">Reintentar set</button>' +
+      '<button class="btn" data-action="home">Volver al inicio</button></div>';
+    return html;
+  }
+
+  function render() {
+    var html;
+    switch (state.view) {
+      case 'sets': html = renderSets(); break;
+      case 'quiz': html = renderQuiz(); break;
+      case 'results': html = renderResults(); break;
+      default: html = renderHome();
+    }
+    app.innerHTML = html;
+  }
+
+  app.addEventListener('click', function (e) {
+    var target = e.target.closest('[data-chapter], [data-set], [data-opt], [data-action]');
+    if (!target) return;
+    if (target.hasAttribute('data-chapter')) {
+      goToSets(parseInt(target.getAttribute('data-chapter'), 10));
+    } else if (target.hasAttribute('data-set')) {
+      startSet(state.chapter, parseInt(target.getAttribute('data-set'), 10));
+    } else if (target.hasAttribute('data-opt')) {
+      selectAnswer(parseInt(target.getAttribute('data-opt'), 10));
+    } else {
+      switch (target.getAttribute('data-action')) {
+        case 'home': backToHome(); break;
+        case 'sets': backToSets(); break;
+        case 'next': nextQuestion(); break;
+        case 'retry': retrySet(); break;
+      }
+    }
+  });
+
+  // Structural validation runs BEFORE the first render and gates the chapter grid:
+  // any chapter with a structural error is excluded (treated like a missing file),
+  // so a null entry, malformed set/question, or invalid answer index never reaches render.
+  // If validate.js failed to load, degrade to rendering everything rather than blanking.
+  if (typeof window.validateAll === 'function') {
+    try {
+      var report = window.validateAll(window.QUIZ_DATA);
+      if (report.warnings && report.warnings.length) {
+        console.warn('[cuestionario] Validation warnings:', report.warnings);
+      }
+      if (!report.ok) {
+        console.error('[cuestionario] Validation errors:', report.errors);
+        (report.invalidChapters || []).forEach(function (k) { invalidChapters[k] = true; });
+        console.warn('[cuestionario] Excluded chapters (failed validation):', report.invalidChapters);
+      } else {
+        console.info('[cuestionario] All loaded banks passed structural validation.');
+      }
+    } catch (e) {
+      console.error('[cuestionario] Validation crashed:', e);
+    }
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
