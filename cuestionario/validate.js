@@ -136,7 +136,7 @@ if (typeof window === 'undefined' && typeof module !== 'undefined' && require.ma
     }
     var chapterCount = Object.keys(shimWindow.QUIZ_DATA).length;
 
-    console.log('Chapters loaded: ' + chapterCount + ' / 17 (files found: ' + files.length + ')');
+    console.log('Chapters loaded: ' + chapterCount + ' (files found: ' + files.length + ')');
     if (report.warnings.length) {
       console.warn('Warnings:');
       report.warnings.forEach(function (w) { console.warn('  - ' + w); });

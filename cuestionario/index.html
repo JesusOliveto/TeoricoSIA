@@ -156,6 +156,7 @@
 <script src="data/cap15.js"></script>
 <script src="data/cap16.js"></script>
 <script src="data/cap17.js"></script>
+<script src="data/test-completo.js"></script>
 <script src="validate.js"></script>
 <script>
 (function () {
@@ -190,6 +191,18 @@
       .sort(function (a, b) { return a - b; });
   }
 
+  // Resolves the active set; -1 is the virtual "Integral" set that chains
+  // every question of the chapter in canonical set order (banks untouched).
+  function getSet(chapter, setIdx) {
+    if (setIdx === -1) {
+      return {
+        name: 'Integral',
+        questions: chapter.sets.reduce(function (acc, s) { return acc.concat(s.questions); }, [])
+      };
+    }
+    return chapter.sets[setIdx];
+  }
+
   function shuffle(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -213,7 +226,7 @@
 
   function startSet(chapterNum, setIdx) {
     var chapter = window.QUIZ_DATA[chapterNum];
-    var set = chapter.sets[setIdx];
+    var set = getSet(chapter, setIdx);
     state.chapter = chapterNum;
     state.setIndex = setIdx;
     state.current = 0;
@@ -237,7 +250,7 @@
   }
 
   function nextQuestion() {
-    var set = window.QUIZ_DATA[state.chapter].sets[state.setIndex];
+    var set = getSet(window.QUIZ_DATA[state.chapter], state.setIndex);
     if (state.current < set.questions.length - 1) {
       state.current++;
     } else {
@@ -273,7 +286,7 @@
     chapters.forEach(function (n) {
       var chapter = window.QUIZ_DATA[n];
       html += '<button class="card" data-chapter="' + n + '">' +
-        '<span class="card-num">Cap. ' + n + '</span>' +
+        '<span class="card-num">' + (n === 18 ? 'TEST' : 'Cap. ' + n) + '</span>' +
         '<span class="card-title">' + escapeHtml(chapter.title) + '</span>' +
         '</button>';
     });
@@ -293,13 +306,18 @@
         '<span class="card-meta">' + set.questions.length + ' preguntas</span>' +
         '</button>';
     });
+    var totalQ = chapter.sets.reduce(function (acc, s) { return acc + s.questions.length; }, 0);
+    html += '<button class="card" data-set="-1">' +
+      '<span class="card-title">Integral (todos los sets, de corrido)</span>' +
+      '<span class="card-meta">' + totalQ + ' preguntas</span>' +
+      '</button>';
     html += '</div>';
     return html;
   }
 
   function renderQuiz() {
     var chapter = window.QUIZ_DATA[state.chapter];
-    var set = chapter.sets[state.setIndex];
+    var set = getSet(chapter, state.setIndex);
     var q = set.questions[state.current];
     var ord = state.order[state.current];
     var answer = state.answers[state.current];
@@ -337,7 +355,7 @@
 
   function renderResults() {
     var chapter = window.QUIZ_DATA[state.chapter];
-    var set = chapter.sets[state.setIndex];
+    var set = getSet(chapter, state.setIndex);
     var total = set.questions.length;
     var score = state.answers.filter(function (a) { return a && a.correct; }).length;
 
