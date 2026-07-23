@@ -75,7 +75,8 @@ window.QUIZ_DATA[4] = {
         { q: "¿Qué devuelve ID3 si R (atributos) está vacío pero S no lo está: un nodo 'falla', o un nodo con el valor más frecuente de C en S?", opts: ["Un nodo 'falla'", 'Sigue buscando un atributo', 'Un árbol vacío', 'Un nodo con el valor más frecuente de C en S'], a: 3, exp: 'Ver §4.4: no confundir con el caso de S vacío.' },
         { q: '¿Cuántas reglas se generan por hoja del árbol: una por hoja, o una por nodo interno?', opts: ['Una por nodo interno', 'Una por atributo', 'Solo una regla para todo el árbol', 'Una por hoja'], a: 3, exp: 'Ver §4.3.' },
         { q: 'Al reconstruir un árbol desde reglas, ¿conviene elegir como raíz el atributo que aparece en MENOS reglas o en MÁS reglas?', opts: ['En más reglas', 'En menos reglas', 'Es indistinto', 'El que no aparece en ninguna regla'], a: 0, exp: 'Ver §4.3.' },
-        { q: '¿C4.5 y J48 son algoritmos completamente distintos y no relacionados?', opts: ['Sí, no tienen relación', 'No: J48 es la implementación de C4.5 en WEKA', 'J48 es anterior a C4.5', 'C4.5 es la implementación de ID3 en WEKA'], a: 1, exp: 'Ver §4.1.' }
+        { q: '¿C4.5 y J48 son algoritmos completamente distintos y no relacionados?', opts: ['Sí, no tienen relación', 'No: J48 es la implementación de C4.5 en WEKA', 'J48 es anterior a C4.5', 'C4.5 es la implementación de ID3 en WEKA'], a: 1, exp: 'Ver §4.1.' },
+        { q: 'Según el algoritmo J48, ¿qué técnica se utiliza para determinar los atributos del árbol?', opts: ['La cobertura de reglas (aciertos/total), como en PRISM', 'La distancia euclídea entre los atributos', 'La ganancia de información, basada en la entropía', 'El grado de pertenencia a cada gaussiana'], a: 2, exp: 'Ver §4.1 y §4.5: J48 es la implementación en WEKA de C4.5 (familia TDIDT); en cada nodo se elige el atributo con mayor ganancia de información, calculada a partir de la entropía.' }
       ]
     }
   ]

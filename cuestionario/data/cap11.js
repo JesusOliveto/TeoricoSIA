@@ -30,7 +30,8 @@ window.QUIZ_DATA[11] = {
         { q: 'Usando patrones = 0,14·N, ¿cuántos patrones puede almacenar de forma confiable una red de N=50 neuronas?', opts: ['14', '7', '50', '3,5'], a: 1, exp: 'Ver §20.5 ficha 23: 0,14 × 50 = 7.' },
         { q: 'Usando N = patrones / 0,14 (redondeando hacia arriba), ¿cuántas neuronas se necesitan como mínimo para almacenar 10 patrones?', opts: ['70', '71', '72', '75'], a: 2, exp: 'Ver §20.5 ficha 23: 10/0,14 = 71,43 → se redondea hacia arriba a 72.' },
         { q: 'Para una red de Hopfield totalmente conectada de N=6 neuronas (sin autoconexiones), ¿cuántas conexiones totales tiene, usando N(N−1)/2?', opts: ['30', '36', '12', '15'], a: 3, exp: 'Ver §11.2: 6·5/2 = 15.' },
-        { q: 'Para el ejemplo del resumen de N=4 neuronas (gráfico del examen), ¿cuántas conexiones totales debe tener el gráfico correcto según N(N−1)/2?', opts: ['6', '8', '4', '12'], a: 0, exp: 'Ver §11.2: 4·3/2 = 6, tal como aparece en el diagrama de la cátedra.' }
+        { q: 'Para el ejemplo del resumen de N=4 neuronas (gráfico del examen), ¿cuántas conexiones totales debe tener el gráfico correcto según N(N−1)/2?', opts: ['6', '8', '4', '12'], a: 0, exp: 'Ver §11.2: 4·3/2 = 6, tal como aparece en el diagrama de la cátedra.' },
+        { q: 'Se dan los patrones en binario P1=[1 0], P2=[1 1], P3=[0 1]. Tras convertirlos a bipolar y aplicar W = Σ Ekᵀ·Ek − 3·I, ¿cuánto vale w12?', opts: ['−1', '3', '0', '1'], a: 0, exp: 'Ver §11.4: primero 0 → −1 (§11.2), quedando E1=[1 −1], E2=[1 1], E3=[−1 1]; w12 = 1·(−1) + 1·1 + (−1)·1 = −1 (la identidad solo afecta la diagonal). Sin convertir los 0 daría 1, el error típico.' }
       ]
     },
     {

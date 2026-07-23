@@ -30,7 +30,8 @@ window.QUIZ_DATA[12] = {
         { q: '¿Cuál es el vector de pesos final w al converger, según la traza de la cátedra?', opts: ['[0; 1; 0,5]', '[-0,5; 1; 1]', '[1; -1; 0,5]', '[-1; 1; 0,5]'], a: 3, exp: 'Ver §12.3 y §20.5 ficha 24.' },
         { q: 'Con w=[-1; 1; 0,5], ¿cuál es la ecuación de la recta separadora w0+w1x1+w2x2=0?', opts: ['x1+0,5x2−1=0', '−x1+0,5x2+1=0', 'x1−0,5x2−1=0', '0,5x1+x2−1=0'], a: 0, exp: 'Ver §20.5 ficha 24.' },
         { q: 'Verificando el punto (1,1) en esa recta (suma=−1+1·1+0,5·1), ¿qué resultado y qué clase asigna la red?', opts: ['−0,5 → clase 0', '0,5 → clase 1 (correcto, AND(1,1)=1)', '0 → clase 0', '1,5 → clase 1'], a: 1, exp: 'Ver §12.3.' },
-        { q: 'Verificando el punto (0,1) en la misma recta (suma=−1+1·0+0,5·1), ¿qué clase asigna la red?', opts: ['Clase 1 (suma=0,5>0)', 'Clase 1 (suma=1)', 'Clase 0 (suma=−0,5, no es mayor a 0)', 'No se puede evaluar'], a: 2, exp: 'Ver §12.3: coincide con AND(0,1)=0.' }
+        { q: 'Verificando el punto (0,1) en la misma recta (suma=−1+1·0+0,5·1), ¿qué clase asigna la red?', opts: ['Clase 1 (suma=0,5>0)', 'Clase 1 (suma=1)', 'Clase 0 (suma=−0,5, no es mayor a 0)', 'No se puede evaluar'], a: 2, exp: 'Ver §12.3: coincide con AND(0,1)=0.' },
+        { q: 'Con Wk = [1 8 6], error εk = 2, α = 0,5 y entrada Xk = [3 1 8], ¿qué vector resulta de aplicar Wk+1 = Wk + α·εk·Xk?', opts: ['[2,5 8,5 10]', '[4 9 14]', '[7 10 22]', '[4 9 22]'], a: 1, exp: 'Ver §12.3: α·εk = 0,5·2 = 1, entonces Wk+1 = [1+3, 8+1, 6+8] = [4 9 14]. En la notación del resumen εk es (d − y): la regla es Δw = α·(d−y)·x. Errores típicos: olvidar εk da [2,5 8,5 10]; olvidar α da [7 10 22].' }
       ]
     },
     {
